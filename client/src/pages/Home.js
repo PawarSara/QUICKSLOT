@@ -1,88 +1,147 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FaCalendarAlt, FaClock, FaLightbulb } from "react-icons/fa";
 import "../styles/Home.css";
-import { FaClock, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
-import { GiBookshelf, GiScissors } from "react-icons/gi";
 
 function Home() {
-  return (
-    <div className="home-container">
+  // useEffect hook to handle the scroll-reveal logic after component mounts
+  useEffect(() => {
+    const sections = document.querySelectorAll('.section-container');
 
-      {/* Background thematic icons */}
-      <GiBookshelf className="bg-icon icon1"/>
-      <GiScissors className="bg-icon icon2"/>
-      <FaCalendarAlt className="bg-icon icon3"/>
-      <FaClock className="bg-icon icon4"/>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+        } else {
+          // Optional: remove class when out of view
+          entry.target.classList.remove('in-view');
+        }
+      });
+    }, {
+      threshold: 0.1 // Triggers when 10% of the section is visible
+    });
+
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+
+    // Clean up the observer when the component unmounts
+    return () => {
+      sections.forEach(section => {
+        observer.unobserve(section);
+      });
+    };
+  }, []); // Empty dependency array ensures this runs only once
+
+  return (
+    <div className="home">
+      {/* Background Elements - These will be styled in CSS */}
+      <div className="background-glow top-left"></div>
+      <div className="background-glow bottom-right"></div>
+      <div className="background-glow center-top"></div>
+      <div className="background-glow middle-left"></div>
+      <div className="background-glow bottom-left-2"></div>
+
+      <div className="background-pattern pattern-one"></div>
+      <div className="background-pattern pattern-two"></div>
+      <div className="background-pattern pattern-three"></div>
+      <div className="background-pattern pattern-four"></div>
+      {/* End Background Elements */}
 
       {/* Hero Section */}
-      <section className="hero">
-        <h1 className="hero-title">📅 QuickSlot</h1>
-        <p className="hero-tagline">Smartly plan your day. Save your time.</p>
-        <div className="hero-buttons">
-          <Link to="/login" className="button">
-            🔑 Login
-          </Link>
-          <Link to="/register" className="button">
-            📝 Register
-          </Link>
+      <section className="hero section-container">
+        <div className="hero-text">
+          <motion.h1 
+            initial={{ opacity: 0, y: -40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            Smart Timetable Management
+          </motion.h1>
+          <p>
+            Plan smarter. Save time. Boost productivity.
+            Our system makes managing your schedule effortless.
+          </p>
+          <div className="hero-buttons">
+            <Link to="/login" className="btn-primary">
+              Login
+            </Link>
+            <Link to="/register" className="btn-secondary">
+              Register
+            </Link>
+          </div>
         </div>
+        <motion.div 
+          className="hero-image"
+          initial={{ opacity: 0, x: 80 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <img src="https://dummyimage.com/500x350/6b00b3/ffffff&text=Timetable+Preview" alt="Preview"/>
+        </motion.div>
       </section>
 
       {/* Features Section */}
-      <section className="features">
-        <h2>Key Features</h2>
+      <section className="features section-container">
+        <h2>Features</h2>
         <div className="feature-cards">
-          <div className="feature-card">
-            <FaClock className="feature-icon"/>
-            <h3>Smart Scheduling</h3>
-            <p>Automatically arrange your timetable without conflicts.</p>
-          </div>
-          <div className="feature-card">
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaCalendarAlt className="feature-icon"/>
-            <h3>Conflict-Free Planning</h3>
-            <p>Ensure no overlapping tasks or subjects in your day.</p>
-          </div>
-          <div className="feature-card">
-            <FaCheckCircle className="feature-icon"/>
-            <h3>Progress Tracking</h3>
-            <p>Keep track of completed tasks and your study goals.</p>
-          </div>
+            <h3>Easy Scheduling</h3>
+            <p>Create and edit timetables effortlessly with our user-friendly interface.</p>
+          </motion.div>
+
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+            <FaClock className="feature-icon"/>
+            <h3>Time Optimization</h3>
+            <p>Get suggestions on how to maximize efficiency and minimize clashes.</p>
+          </motion.div>
+
+          <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
+            <FaLightbulb className="feature-icon"/>
+            <h3>Smart Reminders</h3>
+            <p>Stay on track with AI-powered reminders for tasks and classes.</p>
+          </motion.div>
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="how-it-works">
+      <section className="how-it-works section-container">
         <h2>How It Works</h2>
-        <div className="steps-container">
-          <div className="step-card">
+        <div className="steps">
+          <div className="step">
             <div className="step-number">1</div>
-            <h3>Enter Subjects</h3>
-            <p>Add your subjects with timings and priorities.</p>
+            <h4>Register</h4>
+            <p>Sign up and set up your profile in minutes.</p>
           </div>
-          <div className="step-card">
+          <div className="step">
             <div className="step-number">2</div>
-            <h3>Generate Timetable</h3>
-            <p>QuickSlot automatically creates your optimized schedule.</p>
+            <h4>Create</h4>
+            <p>Build your custom timetable with just a few clicks.</p>
           </div>
-          <div className="step-card">
+          <div className="step">
             <div className="step-number">3</div>
-            <h3>Save & Export</h3>
-            <p>Save your timetable and access it anytime.</p>
+            <h4>Optimize</h4>
+            <p>Let the system suggest the best schedule for you.</p>
           </div>
         </div>
       </section>
 
       {/* Tips Section */}
-      <section className="tips">
-        <h2>Tips for Effective Timetable Planning</h2>
-        <div className="tips-container">
-          <div className="tip-bubble">Prioritize difficult subjects first.</div>
-          <div className="tip-bubble">Include short breaks between sessions.</div>
-          <div className="tip-bubble">Review and adjust weekly.</div>
-          <div className="tip-bubble">Mix theory and practical subjects.</div>
-          <div className="tip-bubble">Keep timetable flexible for surprises.</div>
-        </div>
-      </section>
+      <section className="tips section-container">
+  <h2>Productivity Tips</h2>
+  <div className="tips-container">
+    <div className="tip">Break large tasks into smaller ones.</div>
+    <div className="tip">Use the 25–5 Pomodoro technique.</div>
+    <div className="tip">Prioritize high-impact work first.</div>
+    <div className="tip">Review your schedule every week.</div>
+    <div className="tip">Balance work with short breaks.</div>
+    <div className="tip">Time-block your schedule to stay on track.</div>
+    <div className="tip">Eliminate distractions by turning off notifications.</div>
+    <div className="tip">Start your day with a clear plan.</div>
+  </div>
+</section>
 
       {/* Footer */}
       <footer className="footer">
