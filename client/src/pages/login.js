@@ -5,10 +5,13 @@ import "../styles/login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [serverError, setServerError] = useState(""); // ✅ new
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let formErrors = { email: "", password: "" };
     let isValid = true;
@@ -33,52 +36,100 @@ function Login() {
       formErrors.password = "Password must be at least 6 characters long.";
       isValid = false;
     }
-      else if (password.length > 6) {
-        formErrors.password = "Password must be less than 6 characters long.";
-        isValid = false;
-    }
 
     setErrors(formErrors);
+    setServerError("");
 
     if (isValid) {
-      console.log("✅ Form submitted:", { email, password });
-      // 👉 Here you would call your backend API
-      navigate("/dashboard");
+      try {
+        // ✅ API request to backend
+        const response = await fetch("http://localhost:5000/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setServerError(data.message || "Login failed. Try again.");
+          return;
+        }
+
+        // ✅ Save token in localStorage or sessionStorage
+        if (rememberMe) {
+          localStorage.setItem("token", data.token);
+        } else {
+          sessionStorage.setItem("token", data.token);
+        }
+
+        console.log("✅ Logged in:", data);
+
+        // ✅ Redirect to dashboard
+        navigate("/dashboard");
+      } catch (err) {
+        console.error("❌ Error:", err);
+        setServerError("Server not reachable. Try again later.");
+      }
     }
   };
 
   return (
-    <div className="login-container">
-      <h1 className="login-title">🔑 Login to QuickSlot</h1>
-      <form className="login-form" onSubmit={handleSubmit}>
-        {/* Email Input */}
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={`login-input ${errors.email ? "error" : ""}`}
-        />
-        {errors.email && <p className="error-text">{errors.email}</p>}
+    <div className="login-page">
+      <div className="login-card">
+        <h1 className="login-title">🔑 Login to QuickSlot</h1>
+        <form className="login-form" onSubmit={handleSubmit}>
+          {/* Email Input */}
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={`login-input ${errors.email ? "error" : ""}`}
+          />
+          {errors.email && <p className="error-text">{errors.email}</p>}
 
-        {/* Password Input */}
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className={`login-input ${errors.password ? "error" : ""}`}
-        />
-        {errors.password && <p className="error-text">{errors.password}</p>}
+          {/* Password Input */}
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`login-input ${errors.password ? "error" : ""}`}
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "🙈 Hide" : "👁️ Show"}
+            </button>
+          </div>
+          {errors.password && <p className="error-text">{errors.password}</p>}
 
-        <button type="submit" className="login-button">
-          Login
-        </button>
-      </form>
+          {/* Remember Me */}
+          <label className="remember-me">
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
+            />
+            Remember Me
+          </label>
 
-      <p className="signup-text">
-        Don’t have an account? <a href="/register">Register here</a>
-      </p>
+          {/* Server Error */}
+          {serverError && <p className="error-text">{serverError}</p>}
+
+          <button type="submit" className="login-button">
+            Login
+          </button>
+        </form>
+
+        <p className="signup-text">
+          Don’t have an account? <a href="/register">Register here</a>
+        </p>
+      </div>
     </div>
   );
 }

@@ -152,6 +152,7 @@ html {
   font-size: 3rem;
   background: linear-gradient(90deg, #e74c3c, #f39c12);
   -webkit-background-clip: text;
+  background-clip: text;   /* ✅ Added */
   -webkit-text-fill-color: transparent;
 }
 

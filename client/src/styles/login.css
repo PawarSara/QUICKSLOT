@@ -1,63 +1,157 @@
-/* login.css */
+/* Full-page background */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1f014e, #2e0078);
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
 
-.login-container {
+/* Card container */
+.login-card {
+  background: #2a0459;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
   max-width: 400px;
-  margin: 50px auto;
-  padding: 30px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
   text-align: center;
+  animation: fadeIn 1s ease-out;
+  z-index: 1;
 }
 
+/* Title */
 .login-title {
-  font-size: 22px;
+  font-size: 2rem;
   margin-bottom: 20px;
+  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  -webkit-background-clip: text;
+  background-clip: text;   /* ✅ Added */
+  -webkit-text-fill-color: transparent;
 }
 
+/* Form */
 .login-form {
   display: flex;
   flex-direction: column;
+  gap: 15px;
 }
 
+/* Inputs */
 .login-input {
   padding: 12px;
-  margin-bottom: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.3s;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 15px;
+  background: #1f014e;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.login-input:focus {
+  border: 2px solid #f39c12;
+  outline: none;
+  box-shadow: 0 0 10px rgba(243,156,18,0.5);
 }
 
 /* Highlight invalid fields */
 .login-input.error {
-  border-color: red;
-  background-color: #ffecec;
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.2);
 }
 
 .error-text {
-  color: red;
+  color: #e74c3c;
   font-size: 13px;
-  margin: -5px 0 10px;
   text-align: left;
+  margin-top: -10px;
+  margin-bottom: 5px;
 }
 
+/* Button */
 .login-button {
   padding: 12px;
-  background-color: #007bff;
+  background: linear-gradient(90deg, #e74c3c, #f39c12);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 
 .login-button:hover {
-  background-color: #0056b3;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(231,76,60,0.4);
 }
 
+/* Signup text */
 .signup-text {
-  margin-top: 15px;
+  margin-top: 20px;
   font-size: 14px;
+  color: #c5c5c5;
+}
+
+.signup-text a {
+  color: #f39c12;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-text a:hover {
+  text-decoration: underline;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+/* ✅ Wrap password input + toggle neatly */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 70px; /* leave space for toggle button */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: #e74c3c; /* matches your gradient */
+}
+
+/* ✅ Remember Me */
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.remember-me input[type="checkbox"] {
+  accent-color: #e74c3c; /* modern checkbox styling */
+  transform: scale(1.1);
+  cursor: pointer;
 }
