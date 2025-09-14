@@ -1,69 +1,142 @@
-/* Register.css */
+/* Full-page background */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #1f014e, #2e0078);
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
 
-.register-container {
-    max-width: 450px;
-    margin: 60px auto;
-    padding: 35px;
-    background-color: #f9f9f9;
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  .register-container h2 {
-    text-align: center;
-    margin-bottom: 25px;
-    color: #333;
-  }
-  
-  .register-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .register-form input {
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-  }
-  
-  .register-form input:focus {
-    outline: none;
-    border-color: #007BFF;
-    box-shadow: 0 0 5px #007BFF;
-  }
-  
-  .register-form button {
-    padding: 12px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .register-form button:hover {
-    background-color: #0069d9;
-    transform: scale(1.03);
-  }
-  
-  .register-footer {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #555;
-  }
-  
-  .register-footer a {
-    color: #007BFF;
-    text-decoration: none;
-  }
-  
-  .register-footer a:hover {
-    text-decoration: underline;
-  }
-  
+/* Card container */
+.register-card {
+  background: #2a0459;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  text-align: center;
+  animation: fadeIn 1s ease-out;
+  z-index: 1;
+}
+
+/* Title */
+.register-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #3498db, #9b59b6); /* 💜 Blue-Purple gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Form */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Inputs */
+.register-input {
+  padding: 12px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font-size: 15px;
+  background: #1f014e;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.register-input:focus {
+  border: 2px solid #9b59b6;
+  outline: none;
+  box-shadow: 0 0 10px rgba(155,89,182,0.5);
+}
+
+/* Highlight invalid fields */
+.register-input.error {
+  border-color: #e74c3c;
+  background-color: rgba(231, 76, 60, 0.2);
+}
+
+.error-text {
+  color: #e74c3c;
+  font-size: 13px;
+  text-align: left;
+  margin-top: -10px;
+  margin-bottom: 5px;
+}
+
+/* Password wrapper */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  flex: 1;
+  padding-right: 70px; /* space for toggle button */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #bbb;
+  transition: color 0.2s;
+}
+
+.toggle-password:hover {
+  color: #9b59b6;
+}
+
+/* Button */
+.register-button {
+  padding: 12px;
+  background: linear-gradient(90deg, #3498db, #9b59b6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.register-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(155,89,182,0.4);
+}
+
+/* Login redirect text */
+.login-text {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #c5c5c5;
+}
+
+.login-text a {
+  color: #9b59b6;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.login-text a:hover {
+  text-decoration: underline;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
