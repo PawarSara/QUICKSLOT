@@ -56,7 +56,7 @@ function Register() {
     if (isValid) {
       try {
         // ✅ Send data to backend
-        const response = await fetch("http://localhost:5000/api/register", {
+        const response = await fetch("http://localhost:5000/api/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name, email, password }),

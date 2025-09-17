@@ -8,7 +8,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const [serverError, setServerError] = useState(""); // ✅ new
+  const [serverError, setServerError] = useState(""); 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -56,7 +56,7 @@ function Login() {
           return;
         }
 
-        // ✅ Save token in localStorage or sessionStorage
+        // ✅ Save token
         if (rememberMe) {
           localStorage.setItem("token", data.token);
         } else {
@@ -69,7 +69,7 @@ function Login() {
         navigate("/dashboard");
       } catch (err) {
         console.error("❌ Error:", err);
-        setServerError("Server not reachable. Try again later.");
+        setServerError("Server not reachable. Make sure backend is running.");
       }
     }
   };
