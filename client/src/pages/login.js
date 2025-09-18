@@ -8,7 +8,7 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const [serverError, setServerError] = useState(""); 
+  const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -42,8 +42,7 @@ function Login() {
 
     if (isValid) {
       try {
-        // ✅ API request to backend
-        const response = await fetch("http://localhost:5000/api/login", {
+        const response = await fetch("http://localhost:5000/api/auth/login", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
@@ -63,10 +62,13 @@ function Login() {
           sessionStorage.setItem("token", data.token);
         }
 
+        // ✅ Save userId for use in studentTT.js
+        localStorage.setItem("userId", data.userId); // <<< 👈 THIS LINE IS THE FIX
+
         console.log("✅ Logged in:", data);
 
         // ✅ Redirect to dashboard
-        navigate("/dashboard");
+        navigate("/studentTT");
       } catch (err) {
         console.error("❌ Error:", err);
         setServerError("Server not reachable. Make sure backend is running.");
@@ -79,7 +81,6 @@ function Login() {
       <div className="login-card">
         <h1 className="login-title">🔑 Login to QuickSlot</h1>
         <form className="login-form" onSubmit={handleSubmit}>
-          {/* Email Input */}
           <input
             type="email"
             placeholder="Enter your email"
@@ -89,7 +90,6 @@ function Login() {
           />
           {errors.email && <p className="error-text">{errors.email}</p>}
 
-          {/* Password Input */}
           <div className="password-wrapper">
             <input
               type={showPassword ? "text" : "password"}
@@ -108,7 +108,6 @@ function Login() {
           </div>
           {errors.password && <p className="error-text">{errors.password}</p>}
 
-          {/* Remember Me */}
           <label className="remember-me">
             <input
               type="checkbox"
@@ -118,7 +117,6 @@ function Login() {
             Remember Me
           </label>
 
-          {/* Server Error */}
           {serverError && <p className="error-text">{serverError}</p>}
 
           <button type="submit" className="login-button">

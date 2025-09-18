@@ -1,9 +1,12 @@
+// server.js
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const dotenv = require("dotenv");
 
-const authRoutes = require("./routes/auth"); // ✅ CommonJS: require
+// Import routes
+const authRoutes = require("./routes/auth");       // Login/Register routes
+const timetableRoutes = require("./routes/timetable"); // Timetable routes
 
 dotenv.config();
 
@@ -14,7 +17,8 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api", authRoutes);
+app.use("/api/auth", authRoutes);          // ✅ Auth routes (login/register)
+app.use("/api/timetable", timetableRoutes); // ✅ Timetable routes
 
 // MongoDB Connection
 mongoose

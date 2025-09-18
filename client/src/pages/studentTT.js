@@ -7,7 +7,6 @@ function StudentTT() {
   const [subjectCount, setSubjectCount] = useState("");
   const [subjects, setSubjects] = useState([]);
 
-  // Generate subject fields dynamically
   const generateSubjects = () => {
     const count = parseInt(subjectCount);
     if (isNaN(count) || count <= 0) {
@@ -16,24 +15,22 @@ function StudentTT() {
     }
     const initialSubjects = Array.from({ length: count }, () => ({
       name: "",
-      priority: "3",
+      priority: "Low", // Capitalized to match enum in backend
       weightage: "",
     }));
     setSubjects(initialSubjects);
   };
 
-  // Handle subject input changes
   const handleSubjectChange = (index, field, value) => {
     const newSubjects = [...subjects];
     newSubjects[index][field] = value;
     setSubjects(newSubjects);
   };
 
-  // Final submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validations
+    // Validation
     if (!deadline || isNaN(Date.parse(deadline)) || new Date(deadline) <= new Date()) {
       alert("Enter a valid future deadline");
       return;
@@ -50,14 +47,20 @@ function StudentTT() {
       return;
     }
 
+    const userId = localStorage.getItem("userId");
+    if (!userId) {
+      alert("User not logged in. Please log in first.");
+      return;
+    }
+
     for (let i = 0; i < subjects.length; i++) {
       const { name, priority, weightage } = subjects[i];
       if (!name.trim()) {
         alert(`Subject ${i + 1}: Name cannot be empty`);
         return;
       }
-      if (!["1", "2", "3"].includes(priority)) {
-        alert(`Subject ${i + 1}: Invalid priority`);
+      if (!["High", "Medium", "Low"].includes(priority)) {
+        alert(`Subject ${i + 1}: Invalid priority (must be High, Medium, or Low)`);
         return;
       }
       const w = parseFloat(weightage);
@@ -67,9 +70,38 @@ function StudentTT() {
       }
     }
 
-    // Submit data
-    console.log({ deadline, hoursPerDay, subjects });
-    alert("Form submitted successfully!");
+    // Add userId into each subject object
+    const subjectsWithUserId = subjects.map((subj) => ({
+      ...subj,
+      userId,
+    }));
+
+    const timetableData = {
+      deadline,
+      hoursPerDay,
+      subjects: subjectsWithUserId,
+    };
+
+    try {
+      const response = await fetch("http://localhost:5000/api/timetable/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(timetableData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        alert("Failed to save timetable: " + data.message);
+        return;
+      }
+
+      console.log("✅ Timetable saved:", data);
+      alert("Timetable saved successfully!");
+    } catch (err) {
+      console.error("❌ Error:", err);
+      alert("Server not reachable. Make sure backend is running.");
+    }
   };
 
   return (
@@ -126,9 +158,9 @@ function StudentTT() {
                   handleSubjectChange(index, "priority", e.target.value)
                 }
               >
-                <option value="3">High</option>
-                <option value="2">Medium</option>
-                <option value="1">Low</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
               </select>
 
               <label>Weightage (Hours or Importance):</label>
@@ -154,4 +186,3 @@ function StudentTT() {
 }
 
 export default StudentTT;
-
