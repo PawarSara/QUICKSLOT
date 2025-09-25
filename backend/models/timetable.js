@@ -1,16 +1,18 @@
 const mongoose = require("mongoose");
 
-const subjectSchema = new mongoose.Schema({
-  userId: { type: String, required: true },
-  name: { type: String, required: true },
-  priority: { type: String, enum: ["High", "Medium", "Low"], default: "Medium" },
-  weightage: { type: Number, required: true },
-});
-
 const timetableSchema = new mongoose.Schema({
-  deadline: { type: Date, required: true },
-  hoursPerDay: { type: Number, required: true },
-  subjects: [subjectSchema],
+  year: { type: String, required: true },       // "SE", "TE", "BE"
+  division: { type: String },                   // "A", "B" (optional)
+
+  // slots as Map: { "Mon-1": { subject, faculty } }
+  slots: {
+    type: Map,
+    of: new mongoose.Schema({
+      subject: { type: mongoose.Schema.Types.ObjectId, ref: "Subject" },
+      faculty: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" }
+    }),
+    default: {}
+  }
 });
 
 module.exports = mongoose.model("Timetable", timetableSchema);

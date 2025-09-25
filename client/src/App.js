@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
-import StudentTT from "./pages/studentTT";   // ✅ add this line
+import AdminDashboard from "./pages/AdminDashboard";
+import CreateTT from "./pages/CreateTT";
+
 import "./styles/App.css"; // general app styling
 
 function App() {
@@ -20,7 +22,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/studentTT" element={<StudentTT />} /> 
+          <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/createTT" element={<CreateTT />} />
+
         </Routes>
       </>
     </Router>

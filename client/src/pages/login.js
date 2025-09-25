@@ -68,7 +68,7 @@ function Login() {
         console.log("✅ Logged in:", data);
 
         // ✅ Redirect to dashboard
-        navigate("/studentTT");
+        navigate("/dashboard");
       } catch (err) {
         console.error("❌ Error:", err);
         setServerError("Server not reachable. Make sure backend is running.");
