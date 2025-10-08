@@ -1,0 +1,222 @@
+/* Full-page background */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1f014e, #2e0078);
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Card container */
+  .login-card {
+    background: #2a0459;
+    padding: 40px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    text-align: center;
+    animation: fadeIn 1s ease-out;
+    z-index: 1;
+  }
+  
+  /* Title */
+  .login-title {
+    font-size: 2.2rem;
+    margin-bottom: 25px;
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Form container */
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Selector group (Department, Year, Division) */
+  .selector-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-direction: column; /* Stack on mobile */
+  }
+  
+  @media (min-width: 768px) {
+    .selector-group {
+      flex-direction: row; /* Side-by-side on desktop */
+    }
+    .tt-select {
+      flex: 1;
+    }
+  }
+  
+  /* Inputs */
+  .login-input {
+    padding: 12px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: #1f014e;
+    color: #fff;
+    transition: all 0.3s ease;
+    width: 100%; 
+    box-sizing: border-box;
+  }
+  
+  .login-input:focus {
+    border: 2px solid #f39c12;
+    outline: none;
+    box-shadow: 0 0 10px rgba(243,156,18,0.5);
+  }
+  
+  /* Dropdown (select) */
+  .tt-select {
+    appearance: none;
+    background: #1f014e url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 12px center;
+    background-size: 15px;
+    cursor: pointer;
+    text-align-last: center;
+  }
+  
+  .tt-select option {
+    background-color: #1f014e;
+    color: white;
+  }
+  
+  /* Label for lectures per day */
+  .tt-label {
+    text-align: left;
+    font-size: 1rem;
+    color: #f39c12;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+  
+  /* Button */
+  .login-button {
+    padding: 12px;
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .login-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(231,76,60,0.4);
+  }
+  
+  /* Table styling */
+  .tt-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+  
+  .tt-table th {
+    background-color: #4a90e2;
+    color: white;
+    padding: 12px 5px;
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .tt-table th:first-child { border-top-left-radius: 12px; }
+  .tt-table th:last-child { border-top-right-radius: 12px; }
+  
+  .tt-table td {
+    padding: 10px 5px;
+    border-bottom: 1px solid #3d1b7d;
+    background-color: #35086d;
+    vertical-align: middle;
+  }
+  
+  .tt-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  /* Inputs inside table */
+  .tt-table input {
+    width: 95%;
+    padding: 6px;
+    border-radius: 8px;
+    border: 1px solid #5a2e9b;
+    background: #1f014e;
+    color: #fff;
+    font-size: 0.9rem;
+    box-sizing: border-box;
+  }
+  
+  .tt-table input:focus {
+    border-color: #f39c12;
+    outline: none;
+    box-shadow: 0 0 3px rgba(243,156,18, 0.5);
+  }
+  
+  /* Read-only subject name */
+  .subject-name-display {
+    display: block;
+    padding: 6px;
+    color: #4a90e2;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  
+  /* Subject header */
+  .subject-header {
+    background: #1f014e;
+    padding: 10px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #f39c12;
+    text-align: left;
+    margin-top: 10px;
+    border: 1px solid #5a2e9b;
+  }
+  
+  /* Message box */
+  .message-box {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-weight: bold;
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+  }
+  
+  .message-box.success {
+    background-color: #27ae60;
+  }
+  
+  .message-box.error {
+    background-color: #e74c3c;
+  }
+  
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }

@@ -10,7 +10,10 @@ function AdminDashboard() {
 
   const handleCreateTT = () => {
     navigate("/createTT");
- // or your timetable creation page
+  };
+
+  const handleViewTT = () => {
+    navigate("/viewTT"); // route to your timetable view page
   };
 
   return (
@@ -28,6 +31,15 @@ function AdminDashboard() {
           className="create-tt-button"
         >
           Create Timetable
+        </button>
+
+        <button
+          onClick={handleViewTT}
+          disabled={!token}
+          className="view-tt-button"
+          style={{ marginTop: "10px" }}
+        >
+          View Timetable
         </button>
       </div>
     </div>

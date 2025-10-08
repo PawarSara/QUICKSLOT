@@ -1,18 +1,18 @@
+// models/timetable.js
 const mongoose = require("mongoose");
 
-const timetableSchema = new mongoose.Schema({
-  year: { type: String, required: true },       // "SE", "TE", "BE"
-  division: { type: String },                   // "A", "B" (optional)
+const subjectSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  faculty: { type: String, required: true },
+  lecturesPerWeek: { type: Number, required: true },
+});
 
-  // slots as Map: { "Mon-1": { subject, faculty } }
-  slots: {
-    type: Map,
-    of: new mongoose.Schema({
-      subject: { type: mongoose.Schema.Types.ObjectId, ref: "Subject" },
-      faculty: { type: mongoose.Schema.Types.ObjectId, ref: "Faculty" }
-    }),
-    default: {}
-  }
+const timetableSchema = new mongoose.Schema({
+  year: { type: String, required: true },       // SE, TE, BE
+  division: { type: String, required: true },   // A, B
+  semester: { type: Number, required: true },   // 3-8 depending on year
+  subjects: [subjectSchema],                    // array of subjects
+  createdAt: { type: Date, default: Date.now },
 });
 
 module.exports = mongoose.model("Timetable", timetableSchema);

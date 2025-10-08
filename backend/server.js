@@ -15,10 +15,10 @@ app.use(cors());
 app.use(express.json());
 
 // ------------------ Import Routes ------------------
-const authRoutes = require("./routes/auth");         // Admin login
-const facultyRoutes = require("./routes/faculty");   // Faculty management
-const subjectRoutes = require("./routes/subject");   // Subject management
-const timetableRoutes = require("./routes/timetable"); // Timetable CRUD
+const authRoutes = require("./routes/auth");          // Admin login
+const facultyRoutes = require("./routes/faculty");    // Faculty management
+const subjectRoutes = require("./routes/subject");    // Subject management
+const timetableRoutes = require("./routes/timetable");// Timetable CRUD
 
 // ------------------ API Routes ------------------
 app.use("/api/auth", authRoutes);
@@ -34,10 +34,7 @@ app.get("/", (req, res) => {
 // ------------------ MongoDB Connection ------------------
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URL); // ✅ removed deprecated options
     console.log("✅ MongoDB connected");
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
