@@ -17,7 +17,7 @@ app.use(express.json());
 // ------------------ Import Routes ------------------
 const authRoutes = require("./routes/auth");          // Admin login
 const facultyRoutes = require("./routes/faculty");    // Faculty management
-const subjectRoutes = require("./routes/subject");    // Subject management
+const subjectRoutes = require("./routes/subjectRoutes");    // Subject management
 const timetableRoutes = require("./routes/timetable");// Timetable CRUD
 
 // ------------------ API Routes ------------------

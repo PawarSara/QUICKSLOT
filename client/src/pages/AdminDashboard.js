@@ -9,7 +9,7 @@ function AdminDashboard() {
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
   const handleCreateTT = () => {
-    navigate("/createTT");
+    navigate("/SubjectForm");
   };
 
   const handleViewTT = () => {
