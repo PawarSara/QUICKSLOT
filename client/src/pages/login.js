@@ -124,9 +124,9 @@ function Login() {
           </button>
         </form>
 
-        <p className="signup-text">
+        {/* <p className="signup-text">
           Don’t have an account? <a href="/register">Register here</a>
-        </p>
+        </p> */}
       </div>
     </div>
   );
