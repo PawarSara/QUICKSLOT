@@ -164,7 +164,9 @@ html {
 
 .hero-buttons {
   display: flex;
+  justify-content: center; /* Center horizontally */
   gap: 15px;
+  margin-top: 25px; /* Optional spacing from paragraph */
 }
 
 .btn-primary, .btn-secondary {
@@ -175,10 +177,15 @@ html {
   border: none;
   text-decoration: none;
   color: #fff;
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  margin-top: 25px;
 }
 
 .btn-primary {
   background: linear-gradient(90deg, #e74c3c, #f39c12);
+  padding: 18px 36px; /* Larger button */
+  font-size: 1.2rem;  /* Bigger text */
 }
 
 .btn-secondary {

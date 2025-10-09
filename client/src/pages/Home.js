@@ -67,9 +67,7 @@ function Home() {
             <Link to="/login" className="btn-primary">
               Login
             </Link>
-            <Link to="/register" className="btn-secondary">
-              Register
-            </Link>
+            
           </div>
         </div>
         <motion.div 
