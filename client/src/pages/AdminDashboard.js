@@ -12,11 +12,11 @@ function AdminDashboard() {
   };
 
   const handleAddFaculty = () => {
-    navigate("/FacultyForm"); // ✅ make sure route matches your App.js path
+    navigate("/AddFaculty");
   };
 
   const handleViewTT = () => {
-    navigate("/TimeTableView");
+    navigate("/viewTT");
   };
 
   return (
