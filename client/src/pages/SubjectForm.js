@@ -11,17 +11,40 @@ const semesterSubjects = {
   8: ["DC", "ADS", "EM", "SMA"],
 };
 
+const yearToSemesters = {
+  SE: [3, 4],
+  TE: [5, 6],
+  BE: [7, 8],
+};
+
 function SubjectForm() {
+  const [year, setYear] = useState("");
   const [semester, setSemester] = useState("");
+  const [division, setDivision] = useState(""); 
   const [subjects, setSubjects] = useState([]);
   const [hours, setHours] = useState({});
   const [message, setMessage] = useState("");
 
+  const handleYearChange = (e) => {
+    setYear(e.target.value);
+    setSemester("");
+    setDivision("");
+    setSubjects([]);
+    setHours({});
+    setMessage("");
+  };
+
   const handleSemesterChange = (e) => {
     const sem = e.target.value;
     setSemester(sem);
+    setDivision("");
     setSubjects(semesterSubjects[sem] || []);
     setHours({});
+    setMessage("");
+  };
+
+  const handleDivisionChange = (e) => {
+    setDivision(e.target.value);
     setMessage("");
   };
 
@@ -31,23 +54,35 @@ function SubjectForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formattedSubjects = subjects.map((subj) => ({
+
+    if (!year || !semester || !division || subjects.length === 0) {
+      setMessage("❌ Please select year, semester, division, and enter subjects.");
+      return;
+    }
+
+    const formattedSubjects = subjects.map(subj => ({
       name: subj,
-      hoursPerWeek: Number(hours[subj]) || 0,
+      hoursPerWeek: Number(hours[subj]) >= 0 ? Number(hours[subj]) : 0
     }));
 
     try {
-      await axios.post("http://localhost:5000/api/subject/add", {
-        semester,
-        subjects: formattedSubjects,
+      const response = await axios.post("http://localhost:5000/api/subject/add", {
+        year,
+        semester: Number(semester),
+        division,
+        subjects: formattedSubjects
       });
-      setMessage("✅ Data saved successfully!");
+
+      setMessage(response.data.message);
+      setYear("");
       setSemester("");
+      setDivision("");
       setSubjects([]);
       setHours({});
+
     } catch (error) {
-      console.error(error);
-      setMessage("❌ Error saving data.");
+      console.error("❌ Axios error:", error.response || error);
+      setMessage("❌ Error saving data: " + (error.response?.data?.error || error.message));
     }
   };
 
@@ -57,24 +92,40 @@ function SubjectForm() {
         <h2 className="form-title">📘 Add Subject Hours</h2>
 
         <form onSubmit={handleSubmit}>
-          {/* Semester Dropdown */}
           <div className="form-group">
-            <label>Select Semester:</label>
-            <select
-              value={semester}
-              onChange={handleSemesterChange}
-              className="form-select"
-              required
-            >
-              <option value="">-- Select --</option>
-              {[3, 4, 5, 6, 7, 8].map((sem) => (
-                <option key={sem} value={sem}>{`Semester ${sem}`}</option>
+            <label>Select Year:</label>
+            <select value={year} onChange={handleYearChange} className="form-select" required>
+              <option value="">-- Select Year --</option>
+              {Object.keys(yearToSemesters).map(yr => (
+                <option key={yr} value={yr}>{yr}</option>
               ))}
             </select>
           </div>
 
-          {/* Subjects */}
-          {subjects.length > 0 && (
+          {year && (
+            <div className="form-group">
+              <label>Select Semester:</label>
+              <select value={semester} onChange={handleSemesterChange} className="form-select" required>
+                <option value="">-- Select Semester --</option>
+                {yearToSemesters[year].map(sem => (
+                  <option key={sem} value={sem}>Semester {sem}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {semester && (
+            <div className="form-group">
+              <label>Select Division:</label>
+              <select value={division} onChange={handleDivisionChange} className="form-select" required>
+                <option value="">-- Select Division --</option>
+                <option value="A">Division A</option>
+                <option value="B">Division B</option>
+              </select>
+            </div>
+          )}
+
+          {subjects.length > 0 && division && (
             <div className="subject-list">
               {subjects.map((subject, index) => (
                 <div key={index} className="subject-row">
@@ -92,11 +143,8 @@ function SubjectForm() {
             </div>
           )}
 
-          {/* Button */}
-          {subjects.length > 0 && (
-            <button type="submit" className="submit-btn">
-              Save Data
-            </button>
+          {subjects.length > 0 && division && (
+            <button type="submit" className="submit-btn">Save Data</button>
           )}
         </form>
 

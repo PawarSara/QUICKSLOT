@@ -5,15 +5,18 @@ import { useNavigate } from "react-router-dom";
 function AdminDashboard() {
   const navigate = useNavigate();
 
-  // Check if admin is logged in
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
-  const handleCreateTT = () => {
+  const handleAddSubjectHours = () => {
     navigate("/SubjectForm");
   };
 
+  const handleAddFaculty = () => {
+    navigate("/AddFaculty");
+  };
+
   const handleViewTT = () => {
-    navigate("/viewTT"); // route to your timetable view page
+    navigate("/viewTT");
   };
 
   return (
@@ -25,12 +28,22 @@ function AdminDashboard() {
 
       <div className="admin-dashboard-card">
         <h1>Welcome Admin</h1>
+
         <button
-          onClick={handleCreateTT}
+          onClick={handleAddSubjectHours}
           disabled={!token}
           className="create-tt-button"
         >
-          Create Timetable
+          Add Subject Hours
+        </button>
+
+        <button
+          onClick={handleAddFaculty}
+          disabled={!token}
+          className="create-tt-button"
+          style={{ marginTop: "10px" }}
+        >
+          Add Faculty
         </button>
 
         <button
