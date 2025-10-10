@@ -8,6 +8,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import SubjectForm from "./pages/SubjectForm"; // ✅ new import
 import TimeTableView from "./pages/TimeTableView";
+import ViewFaculty from "./pages/ViewFaculty";
+
 
 import "./styles/App.css";
 import FacultyForm from "./pages/FacultyForm";
@@ -30,6 +32,8 @@ function App() {
           <Route path="/subjectForm" element={<SubjectForm />} /> {/* ✅ new route */}
           <Route path="/facultyForm" element={<FacultyForm />} />
           <Route path="/timeTableView" element={<TimeTableView />} />
+          <Route path="/viewFaculty" element={<ViewFaculty />} />
+
         </Routes>
       </>
     </Router>
