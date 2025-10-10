@@ -12,7 +12,7 @@ function AdminDashboard() {
   };
 
   const handleAddFaculty = () => {
-    navigate("/AddFaculty");
+    navigate("/FacultyForm");
   };
 
   const handleViewTT = () => {
@@ -45,6 +45,26 @@ function AdminDashboard() {
         >
           Add Faculty
         </button>
+         
+         <button
+          onClick={() => navigate("/viewFaculty")}
+          disabled={!token}
+          className="view-tt-button"
+          style={{ marginTop: "10px" }}
+        >
+          View Faculty
+        </button>
+        
+        <button
+          onClick={() => navigate("/viewTT")}
+          disabled={!token}
+          className="view-tt-button"
+          style={{ marginTop: "10px" }}
+        >
+          View Timetable
+        </button>
+
+        
 
         <button
           onClick={handleViewTT}

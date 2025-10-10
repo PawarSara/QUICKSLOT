@@ -1,0 +1,192 @@
+/* Full-page background */
+.view-faculty-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: linear-gradient(135deg, #1f014e, #2e0078);
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  padding: 40px 20px;
+  overflow: hidden;
+}
+
+/* Card container */
+.faculty-card {
+  background: #2a0459;
+  padding: 30px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 750px; /* narrower card */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  animation: fadeIn 1s ease-out;
+}
+
+/* Title */
+.view-faculty-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
+  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Table Styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+thead th {
+  text-align: left;
+  padding: 12px;
+  background: #3a066f;
+  border-bottom: 2px solid #f39c12;
+  color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+
+tbody td {
+  padding: 10px;
+  border-bottom: 1px solid #4e0aa3;
+  vertical-align: middle;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+tbody tr:hover {
+  background: rgba(243, 156, 18, 0.1);
+}
+
+/* Subject badges */
+.subject-badge {
+  display: inline-block;
+  background: rgba(243, 156, 18, 0.2);
+  color: #f39c12;
+  padding: 4px 8px;
+  margin: 2px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Buttons */
+.delete-btn {
+  padding: 6px 14px;
+  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 13px;
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231,76,60,0.4);
+}
+
+/* Messages */
+.message {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #f39c12;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* Slightly darker overlay for depth */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* adds depth by blurring background */
+}
+
+.modal-card {
+  background: linear-gradient(145deg, #2a0459, #3a066f); /* gradient for depth */
+  padding: 30px;
+  border-radius: 25px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.4); /* heavy shadow for depth */
+  transform: translateY(-20px);
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-card p {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f3c012;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modal-buttons button {
+  padding: 8px 20px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-buttons .delete-btn {
+  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(231,76,60,0.4);
+}
+
+.modal-buttons .delete-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(231,76,60,0.6);
+}
+
+.modal-buttons button[style] { /* For the No button */
+  background: #555;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+}
+
+.modal-buttons button[style]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+}

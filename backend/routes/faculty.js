@@ -32,4 +32,18 @@ router.get("/all", async (req, res) => {
   }
 });
 
+// Delete a faculty by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedFaculty = await Faculty.findByIdAndDelete(req.params.id);
+    if (!deletedFaculty) {
+      return res.status(404).json({ message: "Faculty not found" });
+    }
+    res.status(200).json({ message: "Faculty deleted successfully!" });
+  } catch (error) {
+    console.error("Error deleting faculty:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
