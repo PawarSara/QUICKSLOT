@@ -54,7 +54,7 @@ function AdminDashboard() {
         >
           View Faculty
         </button>
-        
+
         <button
           onClick={() => navigate("/viewTT")}
           disabled={!token}
@@ -65,15 +65,6 @@ function AdminDashboard() {
         </button>
 
         
-
-        <button
-          onClick={handleViewTT}
-          disabled={!token}
-          className="view-tt-button"
-          style={{ marginTop: "10px" }}
-        >
-          View Timetable
-        </button>
       </div>
     </div>
   );
