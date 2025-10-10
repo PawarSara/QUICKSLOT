@@ -4,11 +4,13 @@ import Home from "./pages/Home";
 import Login from "./pages/login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
-import CreateTT from "./pages/CreateTT";
-import ViewTT from "./pages/ViewTT";
+
+
 import SubjectForm from "./pages/SubjectForm"; // ✅ new import
+import TimeTableView from "./pages/TimeTableView";
 
 import "./styles/App.css";
+import FacultyForm from "./pages/FacultyForm";
 
 function App() {
   return (
@@ -23,9 +25,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
-          <Route path="/createTT" element={<CreateTT />} />
-          <Route path="/viewTT" element={<ViewTT />} />
+          
+          
           <Route path="/subjectForm" element={<SubjectForm />} /> {/* ✅ new route */}
+          <Route path="/facultyForm" element={<FacultyForm />} />
+          <Route path="/timeTableView" element={<TimeTableView />} />
         </Routes>
       </>
     </Router>

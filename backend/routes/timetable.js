@@ -1,30 +1,95 @@
-// routes/timetable.js
+// backend/routes/timetable.js
 const express = require("express");
 const router = express.Router();
-const Timetable = require("../models/timetable");
+const Faculty = require("../models/facultyModel");
+const Subject = require("../models/subjectModel");
 
-// Create new timetable
-router.post("/create", async (req, res) => {
+const slots = ["9:30-10:30", "10:30-11:30", "11:30-12:30", "1:00-2:00", "2:00-3:00"];
+const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+
+// Helper: initialize empty timetable
+const initTimetable = () => {
+  const table = {};
+  weekdays.forEach(day => {
+    table[day] = {};
+    slots.forEach(slot => {
+      table[day][slot] = null;
+    });
+  });
+  return table;
+};
+
+router.get("/generate", async (req, res) => {
   try {
-    const { year, division, semester, subjects } = req.body;
+    const subjectsData = await Subject.find();
+    const faculties = await Faculty.find();
 
-    // Validation
-    if (!year || !division || !semester || !subjects || subjects.length === 0) {
-      return res.status(400).json({ message: "All fields are required" });
-    }
+    const timetable = initTimetable();
 
-    const newTT = new Timetable({
-      year,
-      division,
-      semester,
-      subjects,
+    // Prepare lectures with remaining hours
+    let lectures = [];
+    subjectsData.forEach(subjRecord => {
+      subjRecord.subjects.forEach(subj => {
+        const faculty = faculties.find(f => f.subjects.includes(subj.name));
+        if (faculty) {
+          lectures.push({
+            subject: subj.name,
+            faculty: faculty.facultyName,
+            remaining: subj.hoursPerWeek
+          });
+        }
+      });
     });
 
-    await newTT.save();
-    res.status(201).json({ message: "Timetable created successfully", timetable: newTT });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    // Sort lectures by hours descending (more hours scheduled first)
+    lectures.sort((a, b) => b.remaining - a.remaining);
+
+    // Calculate total slots per week
+    const totalSlots = weekdays.length * slots.length;
+
+    // Step 1: Create a list of all slot positions
+    let allSlots = [];
+    weekdays.forEach(day => {
+      slots.forEach(slot => {
+        allSlots.push({ day, slot });
+      });
+    });
+
+    // Step 2: Distribute lectures evenly across slots
+    lectures.forEach(lecture => {
+      const step = Math.floor(allSlots.length / lecture.remaining) || 1; // spacing
+      let index = 0;
+
+      for (let i = 0; i < lecture.remaining; i++) {
+        // Find next available slot
+        while (index < allSlots.length && timetable[allSlots[index].day][allSlots[index].slot]) {
+          index++;
+        }
+        if (index >= allSlots.length) {
+          // If overflow, place in any empty slot
+          const emptySlot = allSlots.find(s => !timetable[s.day][s.slot]);
+          if (emptySlot) {
+            timetable[emptySlot.day][emptySlot.slot] = {
+              subject: lecture.subject,
+              faculty: lecture.faculty
+            };
+          }
+          continue;
+        }
+
+        const { day, slot } = allSlots[index];
+        timetable[day][slot] = {
+          subject: lecture.subject,
+          faculty: lecture.faculty
+        };
+        index += step;
+      }
+    });
+
+    res.json({ timetable });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error generating timetable" });
   }
 });
 

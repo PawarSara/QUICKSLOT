@@ -1,0 +1,195 @@
+/* Page Setup */
+.faculty-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f014e, #2e0078);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 60px 20px;
+    color: #fff;
+    font-family: "Segoe UI", sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* Floating Glows */
+  .background-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    animation: pulse 10s infinite alternate ease-in-out;
+  }
+  .top-left {
+    top: -80px;
+    left: -80px;
+    background: radial-gradient(circle, rgba(231, 76, 60, 0.3), transparent 70%);
+  }
+  .bottom-right {
+    bottom: -100px;
+    right: -100px;
+    background: radial-gradient(circle, rgba(243, 156, 18, 0.2), transparent 70%);
+  }
+  .center-top {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(243, 156, 18, 0.15), transparent 70%);
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+    100% { transform: scale(0.8); opacity: 0.3; }
+  }
+  
+  /* Card Container */
+  .faculty-card {
+    backdrop-filter: blur(15px);
+    background: rgba(42, 4, 89, 0.6);
+    border: 1px solid rgba(243, 156, 18, 0.2);
+    padding: 40px 50px;
+    border-radius: 25px;
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+    width: 100%;
+    max-width: 950px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s;
+  }
+  
+  .faculty-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  /* Title */
+  .faculty-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    -webkit-background-clip: text; /* For Safari/Chrome */
+    background-clip: text;         /* Standard version */
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 35px;
+    text-shadow: 0 0 15px rgba(243, 156, 18, 0.3);
+  }
+  
+  /* Input Section */
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 30px;
+  }
+  
+  .input-wrapper label {
+    font-weight: bold;
+    color: #f39c12;
+    font-size: 1.1rem;
+  }
+  
+  .input-wrapper input {
+    padding: 12px 15px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(31, 1, 78, 0.7);
+    color: #fff;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: 0 0 10px rgba(243, 156, 18, 0.2);
+    transition: box-shadow 0.3s, transform 0.2s;
+  }
+  
+  .input-wrapper input:focus {
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.4);
+    transform: scale(1.02);
+  }
+  
+  /* Semester Boxes */
+  .semesters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+  
+  .semester-box {
+    background: rgba(31, 1, 78, 0.6);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .semester-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(243, 156, 18, 0.3);
+  }
+  
+  .semester-box h3 {
+    color: #f39c12;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .subject-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    justify-content: center;
+  }
+  
+  /* Checkbox Styling */
+  .subject-chip {
+    background: rgba(42, 4, 89, 0.5);
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(243, 156, 18, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .subject-chip:hover {
+    background: rgba(231, 76, 60, 0.3);
+    transform: scale(1.05);
+  }
+  
+  .subject-chip input {
+    accent-color: #f39c12;
+  }
+  
+  /* Button */
+  .submit-btn {
+    background: linear-gradient(90deg, #e74c3c, #f39c12);
+    border: none;
+    padding: 14px 35px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    display: block;
+    margin: 20px auto;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.3s;
+  }
+  
+  .submit-btn:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4);
+  }
+  
+  /* Message */
+  .message {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #f39c12;
+    text-shadow: 0 0 10px rgba(243, 156, 18, 0.3);
+  }
+  

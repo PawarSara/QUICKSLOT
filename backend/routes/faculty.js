@@ -1,25 +1,34 @@
+// backend/routes/faculty.js
 const express = require("express");
 const router = express.Router();
-const Faculty = require("../models/faculty");
+const Faculty = require("../models/facultyModel");
 
-// ➕ Add Faculty
+// Add new faculty
 router.post("/add", async (req, res) => {
   try {
-    const faculty = new Faculty(req.body);
-    await faculty.save();
-    res.status(201).json({ message: "Faculty added", faculty });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const { facultyName, subjects } = req.body;
+
+    if (!facultyName || !subjects || subjects.length === 0) {
+      return res.status(400).json({ message: "Please fill all fields." });
+    }
+
+    const newFaculty = new Faculty({ facultyName, subjects });
+    await newFaculty.save();
+
+    res.status(201).json({ message: "Faculty added successfully!" });
+  } catch (error) {
+    console.error("Error adding faculty:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-// 📃 Get All Faculties
-router.get("/", async (req, res) => {
+// Get all faculties
+router.get("/all", async (req, res) => {
   try {
     const faculties = await Faculty.find();
     res.json(faculties);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching faculties" });
   }
 });
 
