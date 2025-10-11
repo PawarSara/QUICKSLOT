@@ -70,7 +70,6 @@ html {
   animation: floatAndFade 15s infinite ease-in-out;
 }
 
-/* Add extra pattern to fill space */
 .background-pattern.extra {
   top: 70%;
   left: 80%;
@@ -122,10 +121,25 @@ html {
 
 .hero-text h1 {
   font-size: 3.5rem;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+}
+
+.hero-text h1 .brand {
+  font-size: 4.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 25px rgba(255, 180, 50, 0.5);
+  display: block;
+}
+
+.hero-text h1 .subtitle {
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #f39c12;
+  margin-top: 5px;
+  display: block;
 }
 
 .hero-text p {
@@ -260,24 +274,4 @@ html {
   border-top: 1px solid #444;
   text-align: center;
   color: #fff;
-}
-
-.footer-col h3, .footer-col h4 {
-  margin-bottom: 15px;
-  color: #f39c12;
-}
-
-.footer-bottom {
-  text-align: center;
-  font-size: 0.9rem;
-  color: #aaa;
-}
-
-/* ------------------ Responsive ------------------ */
-@media (max-width: 768px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero-image { display: none; }
-  .section-container { padding: 60px 15px; }
-  .hero-text h1 { font-size: 2.5rem; }
-  .features h2, .how-it-works h2, .tips h2 { font-size: 2rem; }
 }
