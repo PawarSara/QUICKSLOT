@@ -3,11 +3,11 @@ const router = express.Router();
 const Faculty = require("../models/facultyModel");
 const Subject = require("../models/subjectModel");
 const Timetable = require("../models/timetableModel");
+const FacultySchedule = require("../models/facultyScheduleModel");
 
 const slots = ["9:30-10:30", "10:30-11:30", "11:30-12:30", "1:00-2:00", "2:00-3:00"];
 const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-// Initialize timetable structure
 const initTimetable = () => {
   const table = {};
   weekdays.forEach(day => {
@@ -17,9 +17,6 @@ const initTimetable = () => {
   return table;
 };
 
-// Helper: Shuffle array randomly
-const shuffle = (array) => array.sort(() => Math.random() - 0.5);
-
 router.get("/generate", async (req, res) => {
   try {
     const { semester, division } = req.query;
@@ -27,7 +24,7 @@ router.get("/generate", async (req, res) => {
       return res.status(400).json({ message: "Semester and Division are required" });
     }
 
-    // ✅ Step 1: Check if timetable already exists
+    // ✅ 1. Check if timetable already exists
     const existingTimetable = await Timetable.findOne({ semester, division });
     if (existingTimetable) {
       return res.json({
@@ -37,7 +34,7 @@ router.get("/generate", async (req, res) => {
       });
     }
 
-    // ✅ Step 2: Fetch data for generation
+    // ✅ 2. Fetch subjects and faculties
     const subjectsData = await Subject.find({ semester, division });
     const faculties = await Faculty.find();
     if (!subjectsData.length) {
@@ -46,12 +43,23 @@ router.get("/generate", async (req, res) => {
 
     const timetable = initTimetable();
 
+    // Local tracking (for current division)
     const facultyBusy = {};
     weekdays.forEach(day => {
       facultyBusy[day] = {};
       slots.forEach(slot => (facultyBusy[day][slot] = false));
     });
 
+    // ✅ Load existing global faculty schedules
+    const globalSchedules = await FacultySchedule.find({ semester });
+    const globalBusy = {}; // { faculty: { day: { slot: true/false } } }
+
+    globalSchedules.forEach(record => {
+      const faculty = record.facultyName;
+      globalBusy[faculty] = record.schedule;
+    });
+
+    // ✅ Prepare lecture list
     let lectures = [];
     subjectsData.forEach(record => {
       record.subjects.forEach(subj => {
@@ -73,11 +81,11 @@ router.get("/generate", async (req, res) => {
     weekdays.forEach(day => {
       slots.forEach(slot => allSlots.push({ day, slot }));
     });
-    shuffle(allSlots);
 
     const subjectPerDayCount = {};
     weekdays.forEach(day => (subjectPerDayCount[day] = {}));
 
+    // ✅ Assign lectures
     for (const lecture of lectures) {
       let tries = 0;
 
@@ -85,34 +93,53 @@ router.get("/generate", async (req, res) => {
         const { day, slot } = allSlots[Math.floor(Math.random() * allSlots.length)];
         tries++;
 
+        const faculty = lecture.faculty;
+
+        // Local + Global Clash Check
+        const isLocalBusy = facultyBusy[day][slot];
+        const isGlobalBusy = globalBusy[faculty]?.[day]?.[slot];
+
         if (timetable[day][slot]) continue;
-        if (facultyBusy[day][slot]) continue;
+        if (isLocalBusy || isGlobalBusy) continue;
         if ((subjectPerDayCount[day][lecture.subject] || 0) >= 2) continue;
 
+        // ✅ Assign lecture
         timetable[day][slot] = {
           subject: lecture.subject,
-          faculty: lecture.faculty,
+          faculty,
         };
+
+        // Update local busy map
         facultyBusy[day][slot] = true;
-        subjectPerDayCount[day][lecture.subject] = (subjectPerDayCount[day][lecture.subject] || 0) + 1;
+        subjectPerDayCount[day][lecture.subject] =
+          (subjectPerDayCount[day][lecture.subject] || 0) + 1;
         lecture.assigned++;
+
+        // ✅ Update global busy map in DB
+        let facultyRecord = await FacultySchedule.findOne({ semester, facultyName: faculty });
+        if (!facultyRecord) {
+          facultyRecord = new FacultySchedule({
+            semester,
+            facultyName: faculty,
+            schedule: {},
+          });
+        }
+
+        if (!facultyRecord.schedule[day]) facultyRecord.schedule[day] = {};
+        facultyRecord.schedule[day][slot] = true;
+        await facultyRecord.save();
       }
     }
 
-    // ✅ Step 3: Save timetable permanently
-    const newTimetable = new Timetable({
-      semester,
-      division,
-      timetable,
-    });
+    // ✅ 3. Save final timetable
+    const newTimetable = new Timetable({ semester, division, timetable });
     await newTimetable.save();
 
     res.json({
-      message: "✅ Timetable generated and saved successfully.",
+      message: "✅ Global clash-free timetable generated successfully.",
       timetable,
       fixed: false,
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error generating timetable" });

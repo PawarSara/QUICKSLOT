@@ -3,8 +3,8 @@ import axios from "axios";
 import "../styles/SubjectForm.css";
 
 const semesterSubjects = {
-  3: ["DSGT", "AOA", "COA", "MCE", "OE-I"],
-  4: ["CT", "DBMS", "OS", "MM", "OE-II"],
+  3: ["DSGT", "AOA", "COA", "MCE", "OE1"],
+  4: ["CT", "DBMS", "OS", "MM", "OE2"],
   5: ["TCS", "CN", "DWM", "IP", "SE", "PCE"],
   6: ["CSS", "MC", "AI", "IOT", "SPCC"],
   7: ["ML", "BDA", "NLP", "BLOCK CHAIN", "ILOC"],

@@ -8,8 +8,8 @@ export default function FacultyForm() {
   const [message, setMessage] = useState("");
 
   const semesters = {
-    "Semester 3": ["DSGT", "AOA", "COA", "MCE", "OE"],
-    "Semester 4": ["CT", "DBMS", "OS", "MM", "OE"],
+    "Semester 3": ["DSGT", "AOA", "COA", "MCE", "OE1"],
+    "Semester 4": ["CT", "DBMS", "OS", "MM", "OE2"],
     "Semester 5": ["TCS", "CN", "DWM", "IP", "SE", "PCE"],
     "Semester 6": ["CSS", "MC", "AI", "IOT", "SPCC"],
     "Semester 7": ["ML", "BDA", "NLP", "BLOCK CHAIN", "ILOC"],
