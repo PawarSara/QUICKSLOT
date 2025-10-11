@@ -1,59 +1,77 @@
 .timetable-wrapper {
-    padding: 20px;
-    font-family: 'Segoe UI', sans-serif;
-    text-align: center;
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-  }
-  
-  .timetable {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
-  
-  .timetable th, .timetable td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-    vertical-align: middle;
-    word-wrap: break-word;
-  }
-  
-  .timetable th {
-    background-color: #333;
-    color: #fff;
-  }
-  
-  .timetable td {
-    min-height: 50px;
-    color: #000;
-    font-weight: 500;
-  }
-  
-  /* Lunch break styling */
-  .lunch-cell {
-    background-color: #d3d3d3 !important;
-    font-style: italic;
-    color: #555;
-  }
-  
-  .note {
-    margin-top: 15px;
-    font-size: 0.9rem;
-    color: #333;
-  }
-  
-  /* Optional: rounded corners for table */
-  .timetable {
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  /* Add shadow effect */
-  .timetable td, .timetable th {
-    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
-  }
-  
+  padding: 20px;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+.dropdown-row {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.dropdown-row label {
+  font-weight: 600;
+  color: #333;
+}
+
+select {
+  margin-left: 10px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+}
+
+.timetable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.timetable th,
+.timetable td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  vertical-align: middle;
+  word-wrap: break-word;
+}
+
+.timetable th {
+  background-color: #333;
+  color: #fff;
+}
+
+.timetable td {
+  min-height: 50px;
+  color: #000;
+  font-weight: 500;
+}
+
+.lunch-row,
+.lunch-cell {
+  background-color: #d3d3d3 !important;
+  font-style: italic;
+  color: #555;
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.timetable {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.timetable td,
+.timetable th {
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+}

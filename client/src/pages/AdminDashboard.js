@@ -1,70 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/AdminDashboard.css";
 import { useNavigate } from "react-router-dom";
+import { FaBook, FaUser, FaEye, FaCalendarAlt } from "react-icons/fa";
 
 function AdminDashboard() {
   const navigate = useNavigate();
-
   const token = localStorage.getItem("token") || sessionStorage.getItem("token");
-
-  const handleAddSubjectHours = () => {
-    navigate("/SubjectForm");
-  };
-
-  const handleAddFaculty = () => {
-    navigate("/FacultyForm");
-  };
-
-  const handleViewTT = () => {
-    navigate("/viewTT");
-  };
+  const [facultyOpen, setFacultyOpen] = useState(false);
 
   return (
     <div className="admin-dashboard-page">
-      {/* Sparkles */}
-      {Array.from({ length: 20 }).map((_, i) => (
-        <div key={i} className="sparkle"></div>
-      ))}
+      <div className="dashboard-container">
+        <h1 className="dashboard-title">Welcome Admin</h1>
 
-      <div className="admin-dashboard-card">
-        <h1>Welcome Admin</h1>
+        <div className="dashboard-grid">
+          {/* Add Subject Hours */}
+          <div className="dashboard-card" onClick={() => navigate("/SubjectForm")}>
+            <FaBook className="card-icon" />
+            <h2>Add Subject Hours</h2>
+          </div>
 
-        <button
-          onClick={handleAddSubjectHours}
-          disabled={!token}
-          className="create-tt-button"
-        >
-          Add Subject Hours
-        </button>
+          {/* Faculty Card */}
+          <div className="dashboard-card faculty-wrapper">
+            <div
+              className="faculty-card-header"
+              onClick={() => setFacultyOpen(!facultyOpen)}
+            >
+              <FaUser className="card-icon" />
+              <h2>Faculty</h2>
+              <span className="toggle-arrow">{facultyOpen ? "▲" : "▼"}</span>
+            </div>
 
-        <button
-          onClick={handleAddFaculty}
-          disabled={!token}
-          className="create-tt-button"
-          style={{ marginTop: "10px" }}
-        >
-          Add Faculty
-        </button>
-         
-         <button
-          onClick={() => navigate("/viewFaculty")}
-          disabled={!token}
-          className="view-tt-button"
-          style={{ marginTop: "10px" }}
-        >
-          View Faculty
-        </button>
+            {/* Expanded Panel */}
+            <div className={`faculty-options-panel ${facultyOpen ? "open" : ""}`}>
+              <div className="faculty-option" onClick={() => navigate("/FacultyForm")}>
+                <FaUser /> Add Faculty
+              </div>
+              <div className="faculty-option" onClick={() => navigate("/ViewFaculty")}>
+                <FaEye /> View Faculty
+              </div>
+            </div>
+          </div>
 
-        <button
-          onClick={() => navigate("/viewTT")}
-          disabled={!token}
-          className="view-tt-button"
-          style={{ marginTop: "10px" }}
-        >
-          View Timetable
-        </button>
-
-        
+          {/* View Timetable */}
+          <div className="dashboard-card" onClick={() => navigate("/TimeTableView")}>
+            <FaCalendarAlt className="card-icon" />
+            <h2>View Timetable</h2>
+          </div>
+        </div>
       </div>
     </div>
   );

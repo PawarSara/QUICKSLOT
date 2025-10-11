@@ -3,8 +3,8 @@ import axios from "axios";
 import "../styles/SubjectForm.css";
 
 const semesterSubjects = {
-  3: ["DSGT", "AOA", "COA", "MCE", "OE"],
-  4: ["CT", "DBMS", "OS", "MM", "OE"],
+  3: ["DSGT", "AOA", "COA", "MCE", "OE-I"],
+  4: ["CT", "DBMS", "OS", "MM", "OE-II"],
   5: ["TCS", "CN", "DWM", "IP", "SE", "PCE"],
   6: ["CSS", "MC", "AI", "IOT", "SPCC"],
   7: ["ML", "BDA", "NLP", "BLOCK CHAIN", "ILOC"],
@@ -50,6 +50,7 @@ function SubjectForm() {
 
   const handleHoursChange = (subject, value) => {
     setHours({ ...hours, [subject]: value });
+    setMessage(""); // Clear message on input
   };
 
   const handleSubmit = async (e) => {
@@ -64,6 +65,13 @@ function SubjectForm() {
       name: subj,
       hoursPerWeek: Number(hours[subj]) >= 0 ? Number(hours[subj]) : 0
     }));
+
+    // Calculate total hours
+    const totalHours = formattedSubjects.reduce((sum, subj) => sum + subj.hoursPerWeek, 0);
+    if (totalHours > 25) {
+      setMessage(`❌ Total hours per week exceed 25. Currently: ${totalHours} hrs`);
+      return;
+    }
 
     try {
       const response = await axios.post("http://localhost:5000/api/subject/add", {

@@ -1,94 +1,120 @@
-// backend/routes/timetable.js
 const express = require("express");
 const router = express.Router();
 const Faculty = require("../models/facultyModel");
 const Subject = require("../models/subjectModel");
+const Timetable = require("../models/timetableModel");
 
 const slots = ["9:30-10:30", "10:30-11:30", "11:30-12:30", "1:00-2:00", "2:00-3:00"];
 const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-// Helper: initialize empty timetable
+// Initialize timetable structure
 const initTimetable = () => {
   const table = {};
   weekdays.forEach(day => {
     table[day] = {};
-    slots.forEach(slot => {
-      table[day][slot] = null;
-    });
+    slots.forEach(slot => (table[day][slot] = null));
   });
   return table;
 };
 
+// Helper: Shuffle array randomly
+const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+
 router.get("/generate", async (req, res) => {
   try {
-    const subjectsData = await Subject.find();
+    const { semester, division } = req.query;
+    if (!semester || !division) {
+      return res.status(400).json({ message: "Semester and Division are required" });
+    }
+
+    // ✅ Step 1: Check if timetable already exists
+    const existingTimetable = await Timetable.findOne({ semester, division });
+    if (existingTimetable) {
+      return res.json({
+        message: "✅ Timetable already exists. Showing saved version.",
+        timetable: existingTimetable.timetable,
+        fixed: true,
+      });
+    }
+
+    // ✅ Step 2: Fetch data for generation
+    const subjectsData = await Subject.find({ semester, division });
     const faculties = await Faculty.find();
+    if (!subjectsData.length) {
+      return res.status(404).json({ message: "No subjects found for this semester/division" });
+    }
 
     const timetable = initTimetable();
 
-    // Prepare lectures with remaining hours
+    const facultyBusy = {};
+    weekdays.forEach(day => {
+      facultyBusy[day] = {};
+      slots.forEach(slot => (facultyBusy[day][slot] = false));
+    });
+
     let lectures = [];
-    subjectsData.forEach(subjRecord => {
-      subjRecord.subjects.forEach(subj => {
+    subjectsData.forEach(record => {
+      record.subjects.forEach(subj => {
         const faculty = faculties.find(f => f.subjects.includes(subj.name));
         if (faculty) {
           lectures.push({
             subject: subj.name,
             faculty: faculty.facultyName,
-            remaining: subj.hoursPerWeek
+            hours: subj.hoursPerWeek,
+            assigned: 0
           });
         }
       });
     });
 
-    // Sort lectures by hours descending (more hours scheduled first)
-    lectures.sort((a, b) => b.remaining - a.remaining);
+    lectures.sort((a, b) => b.hours - a.hours);
 
-    // Calculate total slots per week
-    const totalSlots = weekdays.length * slots.length;
-
-    // Step 1: Create a list of all slot positions
-    let allSlots = [];
+    const allSlots = [];
     weekdays.forEach(day => {
-      slots.forEach(slot => {
-        allSlots.push({ day, slot });
-      });
+      slots.forEach(slot => allSlots.push({ day, slot }));
     });
+    shuffle(allSlots);
 
-    // Step 2: Distribute lectures evenly across slots
-    lectures.forEach(lecture => {
-      const step = Math.floor(allSlots.length / lecture.remaining) || 1; // spacing
-      let index = 0;
+    const subjectPerDayCount = {};
+    weekdays.forEach(day => (subjectPerDayCount[day] = {}));
 
-      for (let i = 0; i < lecture.remaining; i++) {
-        // Find next available slot
-        while (index < allSlots.length && timetable[allSlots[index].day][allSlots[index].slot]) {
-          index++;
-        }
-        if (index >= allSlots.length) {
-          // If overflow, place in any empty slot
-          const emptySlot = allSlots.find(s => !timetable[s.day][s.slot]);
-          if (emptySlot) {
-            timetable[emptySlot.day][emptySlot.slot] = {
-              subject: lecture.subject,
-              faculty: lecture.faculty
-            };
-          }
-          continue;
-        }
+    for (const lecture of lectures) {
+      let tries = 0;
 
-        const { day, slot } = allSlots[index];
+      while (lecture.assigned < lecture.hours && tries < 200) {
+        const { day, slot } = allSlots[Math.floor(Math.random() * allSlots.length)];
+        tries++;
+
+        if (timetable[day][slot]) continue;
+        if (facultyBusy[day][slot]) continue;
+        if ((subjectPerDayCount[day][lecture.subject] || 0) >= 2) continue;
+
         timetable[day][slot] = {
           subject: lecture.subject,
-          faculty: lecture.faculty
+          faculty: lecture.faculty,
         };
-        index += step;
+        facultyBusy[day][slot] = true;
+        subjectPerDayCount[day][lecture.subject] = (subjectPerDayCount[day][lecture.subject] || 0) + 1;
+        lecture.assigned++;
       }
+    }
+
+    // ✅ Step 3: Save timetable permanently
+    const newTimetable = new Timetable({
+      semester,
+      division,
+      timetable,
+    });
+    await newTimetable.save();
+
+    res.json({
+      message: "✅ Timetable generated and saved successfully.",
+      timetable,
+      fixed: false,
     });
 
-    res.json({ timetable });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: "Error generating timetable" });
   }
 });

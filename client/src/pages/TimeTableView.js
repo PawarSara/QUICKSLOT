@@ -2,70 +2,141 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../styles/TimeTableView.css";
 
-const slots = ["9:30-10:30", "10:30-11:30", "11:30-12:30", "1:00-2:00", "2:00-3:00"];
+const slots = [
+  "9:30-10:30",
+  "10:30-11:30",
+  "11:30-12:30",
+  "12:30-1:00 (Lunch)",
+  "1:00-2:00",
+  "2:00-3:00"
+];
 const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-// Generate color for each subject
+// Color generator for subjects
 const subjectColors = {};
 const getColor = (subject) => {
   if (!subjectColors[subject]) {
-    const colors = ["#FFB6C1","#87CEFA","#90EE90","#FFA07A","#9370DB","#F0E68C","#FF69B4","#20B2AA"];
-    subjectColors[subject] = colors[Object.keys(subjectColors).length % colors.length];
+    const colors = [
+      "#FFB6C1",
+      "#87CEFA",
+      "#90EE90",
+      "#FFA07A",
+      "#9370DB",
+      "#F0E68C",
+      "#FF69B4",
+      "#20B2AA"
+    ];
+    subjectColors[subject] =
+      colors[Object.keys(subjectColors).length % colors.length];
   }
   return subjectColors[subject];
 };
 
 export default function TimeTableView() {
   const [timetable, setTimetable] = useState(null);
+  const [semester, setSemester] = useState("3");
+  const [division, setDivision] = useState("A");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchTimetable = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/timetable/generate");
-        setTimetable(res.data.timetable);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchTimetable();
-  }, []);
+    if (semester && division) {
+      fetchTimetable();
+    }
+    // eslint-disable-next-line
+  }, [semester, division]);
 
-  if (!timetable) return <p>Loading timetable...</p>;
+  const fetchTimetable = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get(
+        `http://localhost:5000/api/timetable/generate?semester=${semester}&division=${division}`
+      );
+      setTimetable(res.data.timetable);
+    } catch (err) {
+      console.error(err);
+      setTimetable(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="timetable-wrapper">
       <h2>Weekly Timetable</h2>
-      <table className="timetable">
-        <thead>
-          <tr>
-            <th>Time Slot</th>
-            {weekdays.map(day => <th key={day}>{day}</th>)}
-          </tr>
-        </thead>
-        <tbody>
-          {slots.map(slot => (
-            <tr key={slot} className={slot === "12:30-1:00" ? "lunch-row" : ""}>
-              <td className={slot === "12:30-1:00" ? "lunch-cell" : ""}>{slot}</td>
-              {weekdays.map(day => {
-                const lecture = timetable[day][slot];
-                if (!lecture) {
-                  return <td key={day} className={slot === "12:30-1:00" ? "lunch-cell" : ""}>-</td>;
-                }
-                return (
-                  <td
-                    key={day}
-                    style={{ backgroundColor: getColor(lecture.subject) }}
-                  >
-                    <strong>{lecture.subject}</strong><br />
-                    <small>{lecture.faculty}</small>
-                  </td>
-                );
-              })}
+
+      {/* Dropdowns */}
+      <div className="dropdown-row">
+        <label>
+          Semester:
+          <select value={semester} onChange={(e) => setSemester(e.target.value)}>
+            {[3, 4, 5, 6, 7, 8].map((sem) => (
+              <option key={sem} value={sem}>
+                {sem}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Division:
+          <select value={division} onChange={(e) => setDivision(e.target.value)}>
+            {["A", "B", "C"].map((div) => (
+              <option key={div} value={div}>
+                {div}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {loading ? (
+        <p>Loading timetable...</p>
+      ) : !timetable ? (
+        <p>No timetable found for Semester {semester} - Division {division}</p>
+      ) : (
+        <table className="timetable">
+          <thead>
+            <tr>
+              <th>Time Slot</th>
+              {weekdays.map((day) => (
+                <th key={day}>{day}</th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="note"><strong>Note:</strong> Lunch break is highlighted in gray.</p>
+          </thead>
+          <tbody>
+            {slots.map((slot) => (
+              <tr key={slot} className={slot.includes("Lunch") ? "lunch-row" : ""}>
+                <td className={slot.includes("Lunch") ? "lunch-cell" : ""}>{slot}</td>
+                {weekdays.map((day) => {
+                  if (slot.includes("Lunch")) {
+                    return (
+                      <td key={day} className="lunch-cell">
+                        Lunch Break
+                      </td>
+                    );
+                  }
+                  const lecture = timetable[day]?.[slot];
+                  if (!lecture) return <td key={day}>-</td>;
+                  return (
+                    <td
+                      key={day}
+                      style={{ backgroundColor: getColor(lecture.subject) }}
+                    >
+                      <strong>{lecture.subject}</strong>
+                      <br />
+                      <small>{lecture.faculty}</small>
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <p className="note">
+        <strong>Note:</strong> Lunch break is shown in gray.
+      </p>
     </div>
   );
 }

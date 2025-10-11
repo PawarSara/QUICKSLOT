@@ -39,7 +39,8 @@ function ViewFaculty() {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5000/api/faculty/delete/${facultyToDelete}`);
+      await axios.delete(`http://localhost:5000/api/faculty/${facultyToDelete}`);
+
       setMessage("✅ Faculty deleted successfully.");
       fetchFaculty();
     } catch (error) {

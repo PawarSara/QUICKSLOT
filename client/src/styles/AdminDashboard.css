@@ -1,88 +1,124 @@
-/* Full-page background */
+/* Full-page background with vibrant gradient */
 .admin-dashboard-page {
   min-height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1f014e, #2e0078);
+  background: linear-gradient(120deg, #6a11cb, #2575fc);
   font-family: 'Segoe UI', sans-serif;
-  color: #fff;
+  overflow-x: hidden;
   position: relative;
-  overflow: hidden;
 }
 
-/* Sparkle animation */
-.sparkle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: white;
-  border-radius: 50%;
-  animation: sparkleAnim 2s infinite;
-  top: calc(100% * var(--randomY));
-  left: calc(100% * var(--randomX));
-  opacity: 0.8;
-}
-
-@keyframes sparkleAnim {
-  0% { transform: scale(0.5) translateY(0); opacity: 0.8; }
-  50% { transform: scale(1.2) translateY(-10px); opacity: 1; }
-  100% { transform: scale(0.5) translateY(0); opacity: 0.8; }
-}
-
-/* Card container */
-.admin-dashboard-card {
-  background: #2a0459;
-  padding: 50px;
-  border-radius: 20px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+/* Container */
+.dashboard-container {
+  width: 95%;
+  max-width: 1400px;
   text-align: center;
-  z-index: 1;
-  animation: fadeIn 1s ease-out;
+  color: #fff;
 }
 
 /* Title */
-.admin-dashboard-card h1 {
-  font-size: 2.5rem;
-  margin-bottom: 40px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+.dashboard-title {
+  font-size: 3rem;
+  margin-bottom: 50px;
+  text-shadow: 0 0 20px rgba(0,0,0,0.4);
 }
 
-/* Buttons */
-.create-tt-button,
-.view-tt-button {
-  padding: 15px 40px;
-  font-size: 18px;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
-  color: white;
+/* Grid layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+/* Base card */
+.dashboard-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12));
+  padding: 40px 20px;
+  border-radius: 25px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s, opacity 0.3s;
-  display: block;
-  width: 100%;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+  background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.18));
+}
+
+/* Icons */
+.card-icon {
+  font-size: 3rem;
   margin-bottom: 15px;
+  color: #ffbc00;
 }
 
-.create-tt-button:hover,
-.view-tt-button:hover {
+/* Faculty wrapper */
+.faculty-wrapper {
+  flex-direction: column;
+}
+
+/* Faculty header */
+.faculty-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.toggle-arrow {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  color: #fff;
+}
+
+/* Expanded panel */
+.faculty-options-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.faculty-options-panel.open {
+  opacity: 1;
+  max-height: 400px; /* enough to show options */
+}
+
+/* Individual option cards */
+.faculty-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  border-radius: 15px;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.faculty-option:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(231,76,60,0.4);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
 
-.create-tt-button:disabled,
-.view-tt-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-/* Fade-in animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
 }
