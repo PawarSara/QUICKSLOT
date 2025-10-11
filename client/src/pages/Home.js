@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaCalendarAlt, FaClock, FaLightbulb } from "react-icons/fa";
+import SIGCEpreview from "../assets/SIGCEpreview.png";
 import "../styles/Home.css";
 
 function Home() {
@@ -76,7 +77,12 @@ function Home() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1 }}
         >
-          <img src="https://dummyimage.com/500x350/6b00b3/ffffff&text=Timetable+Preview" alt="Preview"/>
+          <img 
+          src={SIGCEpreview} 
+          alt="Timetable Preview" 
+          style={{ width: '100%', maxWidth: '500px', height: 'auto', borderRadius: '15px' }}
+          />
+
         </motion.div>
       </section>
 
@@ -98,8 +104,8 @@ function Home() {
 
           <motion.div className="feature-card" whileHover={{ scale: 1.05 }}>
             <FaLightbulb className="feature-icon"/>
-            <h3>Smart Reminders</h3>
-            <p>Stay on track with AI-powered reminders for tasks and classes.</p>
+          <h3>Department Level </h3>
+            <p>Generates Timetable for multiple years without clashing.</p>
           </motion.div>
         </div>
       </section>
