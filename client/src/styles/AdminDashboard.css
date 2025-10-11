@@ -1,17 +1,25 @@
-/* Full-page background with vibrant gradient */
+/* ------------------ Full-page Animated Gradient ------------------ */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .admin-dashboard-page {
   min-height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(120deg, #6a11cb, #2575fc);
+  background: linear-gradient(120deg, #ff416c, #ff4b2b, #6a11cb, #2575fc, #1abc9c, #f39c12);
+  background-size: 600% 600%;
+  animation: gradientShift 25s ease infinite;
   font-family: 'Segoe UI', sans-serif;
   overflow-x: hidden;
   position: relative;
 }
 
-/* Container */
+/* ------------------ Container ------------------ */
 .dashboard-container {
   width: 95%;
   max-width: 1400px;
@@ -19,14 +27,20 @@
   color: #fff;
 }
 
-/* Title */
+/* ------------------ Title with Rainbow Glow ------------------ */
 .dashboard-title {
   font-size: 3rem;
   margin-bottom: 50px;
-  text-shadow: 0 0 20px rgba(0,0,0,0.4);
+  color: #fff;
+  text-shadow:
+    0 0 5px #ff4b5c,
+    0 0 10px #ff9100,
+    0 0 15px #1abc9c,
+    0 0 20px #3498db,
+    0 0 25px #9b59b6;
 }
 
-/* Grid layout */
+/* ------------------ Grid layout ------------------ */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -34,9 +48,8 @@
   align-items: start;
 }
 
-/* Base card */
+/* ------------------ Base Card with unique rainbow accents ------------------ */
 .dashboard-card {
-  background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.12));
   padding: 40px 20px;
   border-radius: 25px;
   min-height: 180px;
@@ -44,29 +57,51 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  transition: transform 0.4s, box-shadow 0.4s, background 0.4s;
   position: relative;
+  border: 2px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(10px);
 }
 
+/* Rainbow card gradients */
+.dashboard-card:nth-child(1) { background: linear-gradient(145deg, rgba(255,75,92,0.1), rgba(255,145,0,0.1)); }
+.dashboard-card:nth-child(2) { background: linear-gradient(145deg, rgba(26,188,156,0.1), rgba(22,160,133,0.1)); }
+.dashboard-card:nth-child(3) { background: linear-gradient(145deg, rgba(155,89,182,0.1), rgba(142,68,173,0.1)); }
+.dashboard-card:nth-child(4) { background: linear-gradient(145deg, rgba(52,152,219,0.1), rgba(41,128,185,0.1)); }
+.dashboard-card:nth-child(5) { background: linear-gradient(145deg, rgba(243,156,18,0.1), rgba(231,76,60,0.1)); }
+
+/* Card hover effect with glow */
 .dashboard-card:hover {
-  transform: translateY(-8px) scale(1.03);
-  box-shadow: 0 20px 45px rgba(0,0,0,0.4);
-  background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(255,255,255,0.18));
+  transform: translateY(-10px) rotateX(3deg) scale(1.05);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.6),
+              0 0 20px #ff416c,
+              0 0 40px #2575fc,
+              0 0 25px #1abc9c;
 }
 
-/* Icons */
+/* ------------------ Icon animations with unique colors ------------------ */
 .card-icon {
   font-size: 3rem;
   margin-bottom: 15px;
-  color: #ffbc00;
+  transition: transform 0.3s, color 0.3s;
 }
 
-/* Faculty wrapper */
-.faculty-wrapper {
-  flex-direction: column;
-}
+.dashboard-card:nth-child(1) .card-icon { color: #ff4b5c; }
+.dashboard-card:nth-child(2) .card-icon { color: #1abc9c; }
+.dashboard-card:nth-child(3) .card-icon { color: #f1c40f; }
+.dashboard-card:nth-child(4) .card-icon { color: #3498db; }
+.dashboard-card:nth-child(5) .card-icon { color: #9b59b6; }
 
-/* Faculty header */
+.dashboard-card:hover:nth-child(1) .card-icon { color: #ff9100; transform: rotate(15deg) scale(1.2); }
+.dashboard-card:hover:nth-child(2) .card-icon { color: #16a085; transform: rotate(15deg) scale(1.2); }
+.dashboard-card:hover:nth-child(3) .card-icon { color: #f39c12; transform: rotate(15deg) scale(1.2); }
+.dashboard-card:hover:nth-child(4) .card-icon { color: #2980b9; transform: rotate(15deg) scale(1.2); }
+.dashboard-card:hover:nth-child(5) .card-icon { color: #8e44ad; transform: rotate(15deg) scale(1.2); }
+
+/* ------------------ Faculty wrapper ------------------ */
+.faculty-wrapper { flex-direction: column; }
+
+/* ------------------ Faculty header ------------------ */
 .faculty-card-header {
   display: flex;
   flex-direction: column;
@@ -80,7 +115,7 @@
   color: #fff;
 }
 
-/* Expanded panel */
+/* ------------------ Expanded panel ------------------ */
 .faculty-options-panel {
   display: flex;
   flex-direction: column;
@@ -89,36 +124,41 @@
   opacity: 0;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
 }
 
 .faculty-options-panel.open {
   opacity: 1;
-  max-height: 400px; /* enough to show options */
+  max-height: 500px;
 }
 
-/* Individual option cards */
+/* ------------------ Individual option cards with unique hover gradients ------------------ */
 .faculty-option {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 15px 20px;
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
   border-radius: 15px;
   font-size: 1rem;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
 }
 
+/* Option hover gradient variations */
+.faculty-option:nth-child(1):hover { background: linear-gradient(135deg, #ff4b5c, #ff9100, #ffde59); }
+.faculty-option:nth-child(2):hover { background: linear-gradient(135deg, #1abc9c, #16a085, #2ecc71); }
+.faculty-option:nth-child(3):hover { background: linear-gradient(135deg, #9b59b6, #8e44ad, #bdc3c7); }
+.faculty-option:nth-child(4):hover { background: linear-gradient(135deg, #3498db, #2980b9, #5dade2); }
+.faculty-option:nth-child(5):hover { background: linear-gradient(135deg, #f39c12, #e67e22, #f1c40f); }
+
+/* Option hover glow effect */
 .faculty-option:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.45), 0 0 15px #ff4b5c, 0 0 25px #1abc9c;
 }
 
-/* Responsive */
+/* ------------------ Responsive ------------------ */
 @media (max-width: 900px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
+  .dashboard-grid { grid-template-columns: 1fr; }
 }
