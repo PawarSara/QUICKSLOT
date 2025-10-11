@@ -1,67 +1,106 @@
-/* Full-page background */
+/* ------------------ Full-page Dark Animated Gradient with Subtle Glitter ------------------ */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 .login-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #1f014e, #2e0078);
   font-family: 'Segoe UI', sans-serif;
   color: #fff;
   position: relative;
   overflow: hidden;
+
+  /* Darker animated gradient background */
+  background: linear-gradient(135deg, #1a013b, #22005c, #2a0459, #3a066f, #1f014e);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
 }
 
-/* Card container */
-.login-card {
-  background: #2a0459;
-  padding: 40px;
-  border-radius: 20px;
+/* Subtle glitter effect */
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  height: 100%;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.08;
+  animation: glitterMove 12s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes glitterMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 200px; }
+}
+
+/* ------------------ Login Card ------------------ */
+.login-card {
+  background: linear-gradient(145deg, #1f014e, #2a0459, #3a066f);
+  padding: 50px 40px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.7), 0 0 15px #1a013b, 0 0 25px #22005c;
   text-align: center;
-  animation: fadeIn 1s ease-out;
+  animation: fadeIn 1s ease-out, floatCard 3s ease-in-out infinite alternate;
   z-index: 1;
+  position: relative;
 }
 
-/* Title */
+/* Floating animation */
+@keyframes floatCard {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
+}
+
+/* ------------------ Title with Dark Neon Glow ------------------ */
 .login-title {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
-  -webkit-background-clip: text;
-  background-clip: text;   /* ✅ Added */
-  -webkit-text-fill-color: transparent;
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  color: #fff;
+  text-shadow:
+    0 0 3px #8b00ff,
+    0 0 6px #6a00b8,
+    0 0 9px #4c0090;
 }
 
-/* Form */
+/* ------------------ Form ------------------ */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* Inputs */
+/* Inputs with darker focus glow */
 .login-input {
-  padding: 12px;
+  padding: 15px;
   border: 2px solid transparent;
-  border-radius: 12px;
-  font-size: 15px;
-  background: #1f014e;
+  border-radius: 15px;
+  font-size: 16px;
+  background: rgba(31,1,78,0.85);
   color: #fff;
-  transition: all 0.3s ease;
+  transition: all 0.3s ease, box-shadow 0.3s;
 }
 
 .login-input:focus {
-  border: 2px solid #f39c12;
+  border: 2px solid #9b59b6;
   outline: none;
-  box-shadow: 0 0 10px rgba(243,156,18,0.5);
+  box-shadow: 0 0 10px rgba(155,89,182,0.5);
+  background: rgba(31,1,78,0.95);
 }
 
 /* Highlight invalid fields */
 .login-input.error {
   border-color: #e74c3c;
-  background-color: rgba(231, 76, 60, 0.2);
+  background-color: rgba(231,76,60,0.2);
 }
 
 .error-text {
@@ -72,25 +111,27 @@
   margin-bottom: 5px;
 }
 
-/* Button */
+/* ------------------ Button ------------------ */
 .login-button {
-  padding: 12px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  padding: 15px;
+  background: linear-gradient(90deg, #6a11cb, #2575fc, #22005c);
   color: white;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: 15px;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, filter 0.3s;
+  filter: drop-shadow(0 0 5px #6a11cb);
 }
 
 .login-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(231,76,60,0.4);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 15px #2575fc;
+  filter: drop-shadow(0 0 12px #6a11cb);
 }
 
-/* Signup text */
+/* ------------------ Signup text ------------------ */
 .signup-text {
   margin-top: 20px;
   font-size: 14px;
@@ -98,7 +139,7 @@
 }
 
 .signup-text a {
-  color: #f39c12;
+  color: #9b59b6;
   font-weight: bold;
   text-decoration: none;
 }
@@ -107,12 +148,13 @@
   text-decoration: underline;
 }
 
-/* Fade-in animation */
+/* ------------------ Fade-in animation ------------------ */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }
-/* ✅ Wrap password input + toggle neatly */
+
+/* ------------------ Password toggle ------------------ */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -122,7 +164,7 @@
 
 .password-wrapper input {
   flex: 1;
-  padding-right: 70px; /* leave space for toggle button */
+  padding-right: 70px;
 }
 
 .toggle-password {
@@ -132,26 +174,40 @@
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  color: #555;
+  color: #aaa;
   transition: color 0.2s;
 }
 
 .toggle-password:hover {
-  color: #e74c3c; /* matches your gradient */
+  color: #9b59b6;
 }
 
-/* ✅ Remember Me */
+/* ------------------ Remember Me ------------------ */
 .remember-me {
   display: flex;
   align-items: center;
   gap: 8px;
   margin: 10px 0;
   font-size: 0.9rem;
-  color: #555;
+  color: #aaa;
 }
 
 .remember-me input[type="checkbox"] {
-  accent-color: #e74c3c; /* modern checkbox styling */
+  accent-color: #9b59b6;
   transform: scale(1.1);
   cursor: pointer;
+}
+
+/* ------------------ Responsive ------------------ */
+@media (max-width: 500px) {
+  .login-card {
+    padding: 40px 25px;
+  }
+  .login-title {
+    font-size: 2rem;
+  }
+  .login-button {
+    font-size: 16px;
+    padding: 12px;
+  }
 }
