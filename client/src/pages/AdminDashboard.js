@@ -43,7 +43,7 @@ function AdminDashboard() {
           </div>
 
           {/* View Timetable */}
-          <div className="dashboard-card" onClick={() => navigate("/TimeTableView")}>
+          <div className="dashboard-card" onClick={() => navigate("/EditableTimeTable")}>
             <FaCalendarAlt className="card-icon" />
             <h2>View Timetable</h2>
           </div>

@@ -1,44 +1,74 @@
+// backend/routes/subjectRoutes.js
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
+const axios = require("axios");
 const Subject = require("../models/subjectModel");
 
-// POST - Add subjects
+// ✅ Add new subjects
 router.post("/add", async (req, res) => {
   try {
-    const { year, semester, division, subjects } = req.body;
+    console.log("📩 Received data:", req.body);
 
-    // Validate required fields
-    if (!year || !semester || !division || !subjects || subjects.length === 0) {
-      return res.status(400).json({ error: "Year, semester, division, and subjects are required" });
+    const { year, semester, subjects } = req.body;
+
+    if (!year || !semester || !subjects || subjects.length === 0) {
+      return res.status(400).json({ message: "Please fill all fields." });
     }
 
-    // Format subjects
-    const formattedSubjects = subjects.map(subj => ({
-      name: subj.name,
-      hoursPerWeek: Number(subj.hoursPerWeek) >= 0 ? Number(subj.hoursPerWeek) : 0
-    }));
+    // Delete old subjects for same semester before inserting new
+    await Subject.deleteMany({ semester });
 
-    // Generate a unique code for this record
-    const uniqueCode = new mongoose.Types.ObjectId().toString();
-
-    const newRecord = new Subject({
+    // Insert new subjects
+    await Subject.insertMany(subjects.map(sub => ({
       year,
-      semester: Number(semester),
-      division,
-      subjects: formattedSubjects,
-      code: uniqueCode
-    });
+      semester,
+      subjectName: sub.name,
+      hoursPerWeek: sub.hoursPerWeek
+    })));
 
-    await newRecord.save();
-    res.status(201).json({ message: "✅ Data saved successfully!" });
+    console.log("✅ Subjects added successfully for semester:", semester);
+
+    // ✅ Automatically generate timetable right after saving subjects
+    try {
+      const response = await axios.get(`http://localhost:5000/api/timetable/generateAll`, {
+        params: { year, semester }
+      });
+
+      console.log("🗓️ Timetable generation triggered automatically.");
+      console.log("🔹 Response:", response.data);
+
+    } catch (timetableError) {
+      console.error("⚠️ Timetable generation failed:", timetableError.message);
+    }
+
+    res.status(201).json({ message: "✅ Subjects saved and timetable generated automatically!" });
 
   } catch (error) {
-    console.error("❌ Error saving subject data:", error);
-    res.status(500).json({ error: error.message });
+    console.error("❌ Error adding subjects:", error);
+    res.status(500).json({ message: "Server error while adding subjects." });
   }
+});
 
-  console.log("📩 Received data:", req.body);
+// ✅ Get all subjects
+router.get("/all", async (req, res) => {
+  try {
+    const subjects = await Subject.find();
+    res.json(subjects);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching subjects." });
+  }
+});
+
+// ✅ Delete subjects by semester
+router.delete("/:semester", async (req, res) => {
+  try {
+    const { semester } = req.params;
+    await Subject.deleteMany({ semester });
+    res.json({ message: `Subjects for semester ${semester} deleted successfully.` });
+  } catch (error) {
+    console.error("Error deleting subjects:", error);
+    res.status(500).json({ message: "Server error while deleting subjects." });
+  }
 });
 
 module.exports = router;

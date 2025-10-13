@@ -20,7 +20,6 @@ const yearToSemesters = {
 function SubjectForm() {
   const [year, setYear] = useState("");
   const [semester, setSemester] = useState("");
-  const [division, setDivision] = useState(""); 
   const [subjects, setSubjects] = useState([]);
   const [hours, setHours] = useState({});
   const [message, setMessage] = useState("");
@@ -28,7 +27,6 @@ function SubjectForm() {
   const handleYearChange = (e) => {
     setYear(e.target.value);
     setSemester("");
-    setDivision("");
     setSubjects([]);
     setHours({});
     setMessage("");
@@ -37,39 +35,38 @@ function SubjectForm() {
   const handleSemesterChange = (e) => {
     const sem = e.target.value;
     setSemester(sem);
-    setDivision("");
     setSubjects(semesterSubjects[sem] || []);
     setHours({});
     setMessage("");
   };
 
-  const handleDivisionChange = (e) => {
-    setDivision(e.target.value);
-    setMessage("");
-  };
-
   const handleHoursChange = (subject, value) => {
     setHours({ ...hours, [subject]: value });
-    setMessage(""); // Clear message on input
+    setMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!year || !semester || !division || subjects.length === 0) {
-      setMessage("❌ Please select year, semester, division, and enter subjects.");
+    if (!year || !semester || subjects.length === 0) {
+      setMessage("❌ Please select year, semester, and enter subjects.");
       return;
     }
 
-    const formattedSubjects = subjects.map(subj => ({
+    const formattedSubjects = subjects.map((subj) => ({
       name: subj,
-      hoursPerWeek: Number(hours[subj]) >= 0 ? Number(hours[subj]) : 0
+      hoursPerWeek: Number(hours[subj]) >= 0 ? Number(hours[subj]) : 0,
     }));
 
     // Calculate total hours
-    const totalHours = formattedSubjects.reduce((sum, subj) => sum + subj.hoursPerWeek, 0);
+    const totalHours = formattedSubjects.reduce(
+      (sum, subj) => sum + subj.hoursPerWeek,
+      0
+    );
     if (totalHours > 25) {
-      setMessage(`❌ Total hours per week exceed 25. Currently: ${totalHours} hrs`);
+      setMessage(
+        `❌ Total hours per week exceed 25. Currently: ${totalHours} hrs`
+      );
       return;
     }
 
@@ -77,20 +74,20 @@ function SubjectForm() {
       const response = await axios.post("http://localhost:5000/api/subject/add", {
         year,
         semester: Number(semester),
-        division,
-        subjects: formattedSubjects
+        subjects: formattedSubjects,
       });
 
       setMessage(response.data.message);
       setYear("");
       setSemester("");
-      setDivision("");
       setSubjects([]);
       setHours({});
-
     } catch (error) {
       console.error("❌ Axios error:", error.response || error);
-      setMessage("❌ Error saving data: " + (error.response?.data?.error || error.message));
+      setMessage(
+        "❌ Error saving data: " +
+          (error.response?.data?.error || error.message)
+      );
     }
   };
 
@@ -102,10 +99,17 @@ function SubjectForm() {
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Select Year:</label>
-            <select value={year} onChange={handleYearChange} className="form-select" required>
+            <select
+              value={year}
+              onChange={handleYearChange}
+              className="form-select"
+              required
+            >
               <option value="">-- Select Year --</option>
-              {Object.keys(yearToSemesters).map(yr => (
-                <option key={yr} value={yr}>{yr}</option>
+              {Object.keys(yearToSemesters).map((yr) => (
+                <option key={yr} value={yr}>
+                  {yr}
+                </option>
               ))}
             </select>
           </div>
@@ -113,27 +117,23 @@ function SubjectForm() {
           {year && (
             <div className="form-group">
               <label>Select Semester:</label>
-              <select value={semester} onChange={handleSemesterChange} className="form-select" required>
+              <select
+                value={semester}
+                onChange={handleSemesterChange}
+                className="form-select"
+                required
+              >
                 <option value="">-- Select Semester --</option>
-                {yearToSemesters[year].map(sem => (
-                  <option key={sem} value={sem}>Semester {sem}</option>
+                {yearToSemesters[year].map((sem) => (
+                  <option key={sem} value={sem}>
+                    Semester {sem}
+                  </option>
                 ))}
               </select>
             </div>
           )}
 
-          {semester && (
-            <div className="form-group">
-              <label>Select Division:</label>
-              <select value={division} onChange={handleDivisionChange} className="form-select" required>
-                <option value="">-- Select Division --</option>
-                <option value="A">Division A</option>
-                <option value="B">Division B</option>
-              </select>
-            </div>
-          )}
-
-          {subjects.length > 0 && division && (
+          {subjects.length > 0 && (
             <div className="subject-list">
               {subjects.map((subject, index) => (
                 <div key={index} className="subject-row">
@@ -143,7 +143,9 @@ function SubjectForm() {
                     min="0"
                     placeholder="Hours/week"
                     value={hours[subject] || ""}
-                    onChange={(e) => handleHoursChange(subject, e.target.value)}
+                    onChange={(e) =>
+                      handleHoursChange(subject, e.target.value)
+                    }
                     required
                   />
                 </div>
@@ -151,8 +153,10 @@ function SubjectForm() {
             </div>
           )}
 
-          {subjects.length > 0 && division && (
-            <button type="submit" className="submit-btn">Save Data</button>
+          {subjects.length > 0 && (
+            <button type="submit" className="submit-btn">
+              Save Data
+            </button>
           )}
         </form>
 

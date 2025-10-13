@@ -1,4 +1,4 @@
-/* ------------------ Full-page Background ------------------ */
+/* ------------------ Animated Background ------------------ */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -10,227 +10,260 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  background: linear-gradient(135deg, #1f014e, #2e0078, #6a00ff, #ff00c8);
+  background: linear-gradient(135deg, #0d001f, #21005e, #5e00a6, #ff0099);
   background-size: 400% 400%;
   animation: gradientShift 20s ease infinite;
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Poppins", sans-serif;
   color: #fff;
-  padding: 40px 20px;
-  overflow: hidden;
+  padding: 60px 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 }
 
-/* ------------------ Glitter / Particles ------------------ */
+/* ------------------ Subtle Glitter Overlay ------------------ */
 .view-faculty-page::before {
-  content: '';
+  content: "";
   position: absolute;
   width: 150%;
   height: 150%;
-  background: transparent;
   top: -25%;
   left: -25%;
   pointer-events: none;
-  background-image: radial-gradient(rgba(255,255,255,0.3) 1px, transparent 1px);
-  background-size: 50px 50px;
-  animation: glitterMove 10s linear infinite;
+  background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: glitterMove 12s linear infinite;
   z-index: 0;
 }
 
 @keyframes glitterMove {
-  from { transform: translate(0,0); }
-  to { transform: translate(-100px,100px); }
+  from { transform: translate(0, 0); }
+  to { transform: translate(-100px, 100px); }
 }
 
-/* ------------------ Card Container ------------------ */
+/* ------------------ Faculty Card ------------------ */
 .faculty-card {
   position: relative;
-  background: linear-gradient(145deg, #2a0459, #3a066f);
-  padding: 30px;
-  border-radius: 20px;
+  background: rgba(30, 5, 80, 0.9);
+  padding: 40px;
+  border-radius: 25px;
   width: 100%;
-  max-width: 750px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-  animation: fadeIn 1s ease-out, floatCard 4s ease-in-out infinite alternate;
-  transition: transform 0.3s, box-shadow 0.3s;
+  max-width: 850px;
+  max-height: 85vh; /* NEW: allow it to grow taller */
+  overflow-y: auto; /* NEW: scroll inside if content is too big */
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.05);
   z-index: 1;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Floating animation */
-@keyframes floatCard {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
+
+/* Scrollbar styling */
+.faculty-card::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.faculty-card::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ff8a00, #ff00c8);
+  border-radius: 10px;
+}
+.faculty-card::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* ------------------ Title ------------------ */
 .view-faculty-title {
-  font-size: 2rem;
-  margin-bottom: 20px;
+  font-size: 2.6rem;
+  margin-bottom: 30px;
   text-align: center;
-  background: linear-gradient(90deg, #e74c3c, #f39c12, #ff416c);
+  background: linear-gradient(90deg, #ffb347, #ff00cc, #00ffff);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 8px #ff416c, 0 0 16px #f39c12;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 15px rgba(255, 165, 0, 0.7);
 }
 
-/* ------------------ Table Styling ------------------ */
+/* ------------------ Message Box ------------------ */
+.message-box {
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.message-box.success {
+  color: #00ffae;
+  background: rgba(0, 255, 174, 0.1);
+  border: 1px solid rgba(0, 255, 174, 0.3);
+}
+
+.message-box.error {
+  color: #ff7070;
+  background: rgba(255, 50, 50, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+/* ------------------ Table ------------------ */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 15px;
-  font-size: 14px;
+  margin-top: 10px;
+  font-size: 15px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
 }
 
 thead th {
   text-align: left;
-  padding: 12px;
-  background: #3a066f;
-  border-bottom: 2px solid #f39c12;
-  color: #fff;
-  border-radius: 10px 10px 0 0;
+  padding: 14px 12px;
+  background: rgba(90, 0, 180, 0.9);
+  border-bottom: 2px solid #ffb347;
+  color: #fff6d9;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
-tbody td {
-  padding: 10px;
-  border-bottom: 1px solid #4e0aa3;
-  vertical-align: middle;
+tbody tr {
+  transition: transform 0.25s ease, background 0.3s ease, box-shadow 0.3s ease;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 tbody tr:nth-child(even) {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 tbody tr:hover {
-  background: rgba(243, 156, 18, 0.15);
+  background: rgba(243, 156, 18, 0.25);
   transform: scale(1.01);
-  transition: transform 0.2s, background 0.3s;
+  box-shadow: 0 0 12px rgba(243, 156, 18, 0.4);
+}
+
+tbody td {
+  padding: 12px;
+  color: #fffdf7;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  vertical-align: middle;
+  text-shadow: 0 0 6px rgba(0,0,0,0.6);
 }
 
 /* ------------------ Subject Badges ------------------ */
 .subject-badge {
   display: inline-block;
-  background: rgba(243, 156, 18, 0.25);
-  color: #f39c12;
-  padding: 5px 10px;
-  margin: 2px;
-  border-radius: 15px;
-  font-size: 12px;
+  background: linear-gradient(135deg, rgba(255,165,0,0.6), rgba(255, 0, 200, 0.6));
+  color: #fff8dc;
+  padding: 8px 16px;
+  margin: 4px;
+  border-radius: 20px;
+  font-size: 14px;
   font-weight: 600;
-  text-shadow: 0 0 3px rgba(0,0,0,0.5);
-  transition: transform 0.2s;
+  box-shadow: inset 0 0 12px rgba(243, 156, 18, 0.6);
+  text-shadow: 0 0 6px rgba(0,0,0,0.7);
+  transition: all 0.3s ease;
 }
 
 .subject-badge:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 10px #f39c12;
+  box-shadow: 0 0 25px #f39c12;
+  background: linear-gradient(135deg, rgba(255,165,0,0.8), rgba(255, 0, 200, 0.8));
 }
 
 /* ------------------ Buttons ------------------ */
 .delete-btn {
-  padding: 6px 14px;
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
+  padding: 12px 26px;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900);
   color: #fff;
   border: none;
-  border-radius: 12px;
-  font-weight: bold;
+  border-radius: 18px;
+  font-weight: 700;
   cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-size: 13px;
+  transition: all 0.25s ease;
+  font-size: 15px;
+  box-shadow: 0 0 12px rgba(255, 100, 100, 0.4);
 }
 
 .delete-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 16px rgba(231,76,60,0.6), 0 0 8px #f39c12, 0 0 16px #ff416c;
+  transform: translateY(-3px);
+  background: linear-gradient(90deg, #ff6b6b, #ffcc33);
+  box-shadow: 0 0 20px rgba(255, 204, 51, 0.6);
 }
 
-/* ------------------ Messages ------------------ */
-.message {
-  text-align: center;
-  font-size: 14px;
-  margin-bottom: 15px;
-  color: #f39c12;
-}
-
-/* ------------------ Fade-in Animation ------------------ */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* ------------------ Modal Styling ------------------ */
+/* ------------------ Modal ------------------ */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(5px);
 }
 
 .modal-card {
-  background: linear-gradient(145deg, #2a0459, #3a066f);
-  padding: 30px;
+  background: rgba(35, 5, 90, 0.95);
+  padding: 35px;
   border-radius: 25px;
   text-align: center;
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 20px 40px rgba(0, 0, 0, 0.4);
-  transform: translateY(-20px);
-  animation: modalFadeIn 0.3s ease-out forwards;
-}
-
-@keyframes modalFadeIn {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
+  max-width: 420px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7);
+  animation: modalFadeIn 0.4s ease-out forwards;
 }
 
 .modal-card p {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 600;
-  color: #f3c012;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+  color: #ffcc70;
+  margin-bottom: 25px;
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
 }
 
 .modal-buttons {
   display: flex;
   justify-content: center;
-  gap: 15px;
-}
-
-.modal-buttons button {
-  padding: 8px 20px;
-  border-radius: 15px;
-  font-weight: bold;
-  font-size: 14px;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  gap: 20px;
 }
 
 .modal-buttons .delete-btn {
-  background: linear-gradient(90deg, #e74c3c, #f39c12);
-  color: #fff;
-  box-shadow: 0 5px 15px rgba(231,76,60,0.5);
-}
-
-.modal-buttons .delete-btn:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(231,76,60,0.7);
+  padding: 10px 24px;
 }
 
 .modal-buttons button[style] {
-  background: #555;
+  background: #444 !important;
   color: #fff;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
 }
 
 .modal-buttons button[style]:hover {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  background: #666 !important;
+  transform: translateY(-3px);
+}
+
+/* ------------------ Animations ------------------ */
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------ Responsive ------------------ */
+@media (max-width: 600px) {
+  .faculty-card {
+    padding: 25px;
+    max-height: none;
+  }
+
+  table {
+    font-size: 13px;
+  }
+
+  .delete-btn {
+    font-size: 13px;
+    padding: 8px 18px;
+  }
 }
