@@ -17,15 +17,16 @@ const subjectColors = {};
 const getColor = (subject) => {
   if (!subjectColors[subject]) {
     const colors = [
-      "#FFB6C1",
-      "#87CEFA",
-      "#90EE90",
-      "#FFA07A",
-      "#9370DB",
-      "#F0E68C",
-      "#FF69B4",
-      "#20B2AA"
+      "#FF6EC7", // bright pink
+      "#7C4DFF", // vibrant purple
+      "#1E90FF", // deep sky blue
+      "#FF8C42", // bright orange
+      "#00FA9A", // medium spring green
+      "#FFD700", // gold
+      "#FF4500", // orange red
+      "#40E0D0"  // turquoise
     ];
+    
     subjectColors[subject] =
       colors[Object.keys(subjectColors).length % colors.length];
   }
@@ -57,6 +58,22 @@ export default function TimeTableView() {
       setTimetable(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // ------------------ Delete Timetable Function ------------------
+  const handleDeleteTimetable = async () => {
+    if (!window.confirm("Are you sure you want to delete this timetable?")) return;
+
+    try {
+      await axios.delete(
+        `http://localhost:5000/api/timetable/delete?semester=${semester}&division=${division}`
+      );
+      alert("✅ Timetable deleted successfully.");
+      setTimetable(null); // clears timetable
+    } catch (error) {
+      console.error("Error deleting timetable:", error);
+      alert("❌ Failed to delete timetable.");
     }
   };
 
@@ -134,9 +151,14 @@ export default function TimeTableView() {
         </table>
       )}
 
-      <p className="note">
-        <strong>Note:</strong> Lunch break is shown in gray.
-      </p>
+      {/* Delete Timetable Button */}
+      <button 
+        className="delete-timetable-btn"
+        onClick={handleDeleteTimetable}
+      >
+        Delete Timetable
+      </button>
+
     </div>
   );
 }
