@@ -97,7 +97,7 @@ export default function TimeTableView() {
         <label>
           Division:
           <select value={division} onChange={(e) => setDivision(e.target.value)}>
-            {["A", "B", "C"].map((div) => (
+            {["A", "B"].map((div) => (
               <option key={div} value={div}>
                 {div}
               </option>
@@ -109,7 +109,10 @@ export default function TimeTableView() {
       {loading ? (
         <p>Loading timetable...</p>
       ) : !timetable ? (
-        <p>No timetable found for Semester {semester} - Division {division}</p>
+        <p className="no-timetable-text">
+        No timetable found for Semester {semester} - Division {division}
+        </p>
+
       ) : (
         <table className="timetable">
           <thead>
