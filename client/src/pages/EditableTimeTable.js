@@ -117,7 +117,7 @@ const EditableTimeTable = () => {
         <label>
           Division:
           <select value={division} onChange={(e) => setDivision(e.target.value)}>
-            {["A","B","C"].map((d)=> <option key={d}>{d}</option>)}
+            {["A","B"].map((d)=> <option key={d}>{d}</option>)}
           </select>
         </label>
       </div>
@@ -125,7 +125,7 @@ const EditableTimeTable = () => {
       {loading ? (
         <p>Loading timetable...</p>
       ) : !timetable ? (
-        <p>No timetable found.</p>
+        <p className="no-timetable-text">No timetable found</p>
       ) : (
         <table className="timetable">
           <thead>
@@ -177,7 +177,7 @@ const EditableTimeTable = () => {
         </table>
       )}
 
-      <button onClick={handleSave} style={{marginTop:"10px"}}>Save Changes</button>
+        <button className="save-changes-btn" onClick={handleSave}>Save Changes</button>
     </div>
   );
 };

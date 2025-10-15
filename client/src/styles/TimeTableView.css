@@ -1,16 +1,16 @@
-/* ------------------ Full-page Background ------------------ */
+/* ------------------ Full-page Animated Background ------------------ */
 body {
   margin: 0;
   padding: 0;
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #0d001f, #21005e, #5e00a6, #ff0099);
-  background-size: 400% 400%;
+  background: radial-gradient(circle at 20% 30%, #21005e, #0d001f, #5e00a6, #ff0099);
+  background-size: 300% 300%;
   animation: gradientShift 25s ease infinite;
   color: #fff;
   overflow: auto;
 }
 
-/* ------------------ Gradient Animation ------------------ */
+/* Gradient Animation */
 @keyframes gradientShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
@@ -22,63 +22,94 @@ body {
   width: 95%;
   max-width: 1400px;
   margin: 40px auto;
-  padding: 30px;
+  padding: 35px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(20, 5, 80, 0.85);
-  border-radius: 25px;
-  box-shadow: 0 0 50px rgba(255, 0, 255, 0.3), inset 0 0 15px rgba(255,255,255,0.05);
+  background: rgba(25, 10, 60, 0.9);
+  border-radius: 30px;
+  box-shadow: 0 0 50px rgba(255, 0, 255, 0.4),
+              inset 0 0 20px rgba(255,255,255,0.1),
+              0 0 80px rgba(0,255,255,0.1);
+  backdrop-filter: blur(12px);
   position: relative;
+  overflow: hidden;
+}
+
+.timetable-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 10%, transparent 11%);
+  background-size: 5% 5%;
+  animation: sparkle 8s linear infinite;
+  z-index: 0;
+  opacity: 0.3;
+}
+
+@keyframes sparkle {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* ------------------ Title ------------------ */
 .timetable-wrapper h2 {
-  font-size: 2.2rem;
+  font-size: 2.4rem;
   margin-bottom: 30px;
   text-align: center;
-  background: linear-gradient(90deg, #ffb347, #ff416c, #ff8c00);
+  background: linear-gradient(90deg, #ffb347, #ff416c, #ff8c00, #00ffe0);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px rgba(255,183,77,0.9), 0 0 25px rgba(255,65,108,0.7);
+  text-shadow: 0 0 25px rgba(255,255,255,0.4);
   animation: textGlow 3s ease-in-out infinite alternate;
 }
 
 @keyframes textGlow {
-  0% { text-shadow: 0 0 8px rgba(255,183,77,0.5), 0 0 16px rgba(255,65,108,0.4); }
-  100% { text-shadow: 0 0 15px rgba(255,183,77,0.9), 0 0 25px rgba(255,65,108,0.7); }
+  0% { text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+  100% { text-shadow: 0 0 25px rgba(255,255,255,1); }
 }
 
 /* ------------------ Dropdown Row ------------------ */
 .dropdown-row {
-  margin-bottom: 30px;
+  margin-bottom: 35px;
   display: flex;
   justify-content: center;
   gap: 25px;
   flex-wrap: wrap;
+  z-index: 1;
 }
 
 .dropdown-row label {
   font-weight: 600;
   color: #fff;
   font-size: 1rem;
+  text-shadow: 0 0 5px rgba(255,255,255,0.6);
 }
 
 select {
   margin-left: 10px;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.05);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(10,10,30,0.9);
   color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 1rem;
+  box-shadow: inset 0 0 10px rgba(0,255,255,0.2);
 }
 
-select:focus {
-  outline: none;
-  border-color: #ffb347;
-  box-shadow: 0 0 8px rgba(255,183,77,0.5);
+select:hover {
+  border-color: #00ffe0;
+  box-shadow: 0 0 12px rgba(0,255,255,0.4);
+}
+
+select option {
+  background: #1a1a3a;
+  color: #fff;
 }
 
 /* ------------------ Timetable Table ------------------ */
@@ -86,9 +117,10 @@ select:focus {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
-  border-radius: 15px;
+  border-radius: 18px;
   overflow: hidden;
   margin-bottom: 20px;
+  z-index: 1;
 }
 
 .timetable th,
@@ -101,16 +133,17 @@ select:focus {
 }
 
 .timetable th {
-  background: rgba(90,0,180,0.9);
+  background: linear-gradient(90deg, rgba(90,0,180,0.95), rgba(255,0,200,0.8));
   color: #fff;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   letter-spacing: 0.5px;
-  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  text-shadow: 0 0 10px rgba(255,255,255,0.6);
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
 .timetable td {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.07);
   color: #fff;
   font-weight: 500;
   min-height: 70px;
@@ -120,56 +153,94 @@ select:focus {
 }
 
 .timetable td:hover {
-  background: rgba(255, 165, 0, 0.15);
-  box-shadow: inset 0 0 8px rgba(255,165,0,0.3);
+  background: rgba(255,165,0,0.25);
+  box-shadow: inset 0 0 10px rgba(255,165,0,0.5);
+  transform: scale(1.03);
+}
+
+/* ------------------ "No Timetable Found" Message ------------------ */
+.no-timetable-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  text-shadow: 0 0 12px rgba(0,255,255,0.8);
+  background: rgba(255,255,255,0.08);
+  padding: 14px 30px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(6px);
+  animation: fadePulse 3s infinite ease-in-out;
+  margin-top: 20px;
+}
+
+
+@keyframes fadePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 /* ------------------ Lunch Row ------------------ */
 .lunch-row,
 .lunch-cell {
-  background-color: #ffffff !important;
-
+  background-color: rgba(255,255,255,0.9) !important;
   font-style: italic;
-  color: #333 !important;
+  color: #2b2b2b !important;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
 }
 
+/* ------------------ Delete Timetable Button ------------------ */
 .delete-timetable-btn {
-  padding: 12px 25px;
-  margin-top: 20px;
+  padding: 14px 28px;
+  margin-top: 25px;
   border: none;
-  border-radius: 20px;
+  border-radius: 25px;
   background: linear-gradient(135deg, #FF6F91, #845EC2, #00C9A7, #FFBE0B);
   color: #000;
-  font-weight: 600;
-  font-size: 1rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   cursor: pointer;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .delete-timetable-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(255,255,255,0.7);
 }
 
-
-/* ------------------ Scrollbars for overflow ------------------ */
-.timetable-wrapper {
-  overflow: auto;
+/* ------------------ Save Changes Button ------------------ */
+.save-changes-btn {
+  padding: 14px 28px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #00C9FF, #92FE9D, #00FFA3);
+  color: #000;
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,255,200,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.save-changes-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(0,255,200,0.8);
+}
+
+/* ------------------ Scrollbars ------------------ */
 .timetable-wrapper::-webkit-scrollbar {
   height: 10px;
   width: 10px;
 }
 
 .timetable-wrapper::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.3);
+  background: linear-gradient(180deg, #ff00cc, #3333ff);
   border-radius: 10px;
 }
 
 .timetable-wrapper::-webkit-scrollbar-track {
-  background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.2);
 }
 
 /* ------------------ Responsive ------------------ */
@@ -179,9 +250,8 @@ select:focus {
     padding: 14px 8px;
     font-size: 0.9rem;
   }
-  
   select {
-    width: 140px;
+    width: 150px;
   }
 }
 
@@ -189,38 +259,37 @@ select:focus {
 .timetable td .faculty-name {
   font-weight: 600;
   font-size: 1rem;
-  color: #242220; /* bright, readable on your gradient background */
-  text-shadow: 0 0 6px rgba(43, 40, 40, 0.5);
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0,255,255,0.8);
 }
 
 /* ------------------ Subject Badges inside table ------------------ */
 .timetable td .subject-badge {
   display: inline-block;
   background: linear-gradient(135deg, #FF6F91, #845EC2, #00C9A7, #FFBE0B);
-
   color: #fff;
   padding: 6px 12px;
   margin: 3px;
-  border-radius: 18px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-shadow: 0 0 4px rgba(0,0,0,0.5);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-shadow: 0 0 4px rgba(0,0,0,0.6);
   transition: all 0.3s ease;
 }
 
 .timetable td .subject-badge:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 15px rgba(255, 183, 77, 0.5);
+  box-shadow: 0 0 15px rgba(255, 183, 77, 0.7);
 }
 
-/* ------------------ Faculty Name (small tag) ------------------ */
+/* ------------------ Faculty (small tag) ------------------ */
 .timetable td small {
   display: block;
   margin-top: 6px;
   font-weight: 600;
   font-size: 0.95rem;
-  color: #1a1811; /* bright gold */
-  text-shadow: 0 0 5px rgba(0,0,0,0.6);
+  color: #f0f0f0;
+  text-shadow: 0 0 5px rgba(0,255,255,0.6);
 }
 
 /* ------------------ Subject Name (strong tag) ------------------ */
@@ -229,14 +298,9 @@ select:focus {
   font-weight: 700;
   font-size: 1rem;
   color: #fff;
-  text-shadow: 0 0 4px rgba(0,0,0,0.6);
+  text-shadow: 0 0 5px rgba(0,255,255,0.9);
 }
 
-/* Optional hover effect */
 .timetable td:hover strong {
-  text-shadow: 0 0 8px rgba(255,255,255,0.9);
-}
-
-.timetable td:hover small {
-  text-shadow: 0 0 8px rgba(29, 28, 25, 0.9);
+  text-shadow: 0 0 10px rgba(255,255,255,1);
 }
