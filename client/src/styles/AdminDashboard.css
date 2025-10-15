@@ -132,7 +132,7 @@
   max-height: 500px;
 }
 
-/* ------------------ Individual option cards with unique hover gradients ------------------ */
+/* ------------------ Individual option cards ------------------ */
 .faculty-option {
   display: flex;
   align-items: center;
@@ -145,17 +145,13 @@
   transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
 }
 
-/* Option hover gradient variations */
-.faculty-option:nth-child(1):hover { background: linear-gradient(135deg, #ff4b5c, #ff9100, #ffde59); }
-.faculty-option:nth-child(2):hover { background: linear-gradient(135deg, #1abc9c, #16a085, #2ecc71); }
-.faculty-option:nth-child(3):hover { background: linear-gradient(135deg, #9b59b6, #8e44ad, #bdc3c7); }
-.faculty-option:nth-child(4):hover { background: linear-gradient(135deg, #3498db, #2980b9, #5dade2); }
-.faculty-option:nth-child(5):hover { background: linear-gradient(135deg, #f39c12, #e67e22, #f1c40f); }
-
-/* Option hover glow effect */
+/* --- Unified yellow-orange gradient for all dropdown options --- */
 .faculty-option:hover {
+  background: linear-gradient(135deg, #ff4b5c, #ff9100, #ffde59);
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.45), 0 0 15px #ff4b5c, 0 0 25px #1abc9c;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45),
+              0 0 15px #ff9100,
+              0 0 25px #ffde59;
 }
 
 /* ------------------ Responsive ------------------ */

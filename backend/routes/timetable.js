@@ -11,17 +11,13 @@ const FacultySchedule = require("../models/facultyScheduleModel");
 // ------------------------------
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 const slots = ["9:30-10:30", "10:30-11:30", "11:30-12:30", "1:00-2:00", "2:00-3:00"];
-const divisions = ["A", "B"]; // generates both A and B
+const divisions = ["A", "B"];
 
 // ------------------------------
 // Helper Functions
 // ------------------------------
 function isFacultyFree(facultyBusy, facultyName, day, slot) {
-  return !(
-    facultyBusy[facultyName] &&
-    facultyBusy[facultyName][day] &&
-    facultyBusy[facultyName][day].includes(slot)
-  );
+  return !(facultyBusy[facultyName]?.[day]?.includes(slot));
 }
 
 function markFacultyBusy(facultyBusy, facultyName, day, slot) {
@@ -33,11 +29,9 @@ function markFacultyBusy(facultyBusy, facultyName, day, slot) {
 }
 
 async function upsertFacultyScheduleSlot(semesterNum, facultyName, day, slot) {
-  const setObj = {};
-  setObj[`schedule.${day}.${slot}`] = true;
   await FacultySchedule.findOneAndUpdate(
     { semester: semesterNum, facultyName },
-    { $set: setObj },
+    { $set: { [`schedule.${day}.${slot}`]: true } },
     { upsert: true, setDefaultsOnInsert: true }
   );
 }
@@ -59,8 +53,7 @@ function createEmptyTimetable() {
 function countSubjectInDay(timetable, day, subject) {
   let c = 0;
   for (const slot of slots) {
-    const cell = timetable[day][slot];
-    if (cell && cell.subject === subject) c++;
+    if (timetable[day][slot]?.subject === subject) c++;
   }
   return c;
 }
@@ -73,13 +66,6 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
   for (const s of subjects) {
     const facDoc = findFacultyForSubject(faculties, s.name || s.subjectName);
     if (facDoc) facultyAssignments[s.name || s.subjectName] = getFacultyNameField(facDoc);
-  }
-
-  for (const s of subjects) {
-    const subjName = s.name || s.subjectName;
-    if (!facultyAssignments[subjName]) {
-      console.warn(`⚠️ No faculty assigned for subject "${subjName}" — skipping.`);
-    }
   }
 
   const facultyBusy = {};
@@ -98,7 +84,6 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
 
     while (progress) {
       progress = false;
-
       for (let i = 0; i < subjNames.length; i++) {
         const subjName = subjNames[(startIdx + i) % subjNames.length];
         if ((remaining[subjName] || 0) <= 0) continue;
@@ -106,10 +91,8 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
         if (!facName) continue;
 
         let placed = false;
-
         for (const day of days) {
           if (countSubjectInDay(timetable, day, subjName) >= 2) continue;
-
           for (const slot of slots) {
             if (remaining[subjName] <= 0) break;
             if (timetable[day][slot]) continue;
@@ -124,7 +107,7 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
               console.error("Error upserting FacultySchedule:", err);
             }
 
-            remaining[subjName] = Math.max(0, remaining[subjName] - 1);
+            remaining[subjName]--;
             placed = true;
             progress = true;
             break;
@@ -132,7 +115,6 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
           if (placed) break;
         }
       }
-
       startIdx = (startIdx + 1) % Math.max(1, subjNames.length);
     }
 
@@ -144,6 +126,7 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
       }
     }
 
+    // Fill empty slots with Off
     for (const day of days) {
       for (const slot of slots) {
         if (!timetable[day][slot])
@@ -158,35 +141,27 @@ async function scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum) 
 }
 
 // ------------------------------
-// Generate All Divisions
+// Routes
 // ------------------------------
+
+// Generate All Divisions
 router.get("/generateAll", async (req, res) => {
   try {
     const { year, semester } = req.query;
-    if (!year || !semester) {
-      return res.status(400).json({ error: "year and semester are required" });
-    }
+    if (!year || !semester) return res.status(400).json({ error: "year and semester required" });
     const semesterNum = Number(semester);
 
-    // ✅ FIX: fetch all subject docs (new model structure)
     const subjects = await Subject.find({ year, semester: semesterNum });
-    if (!subjects || subjects.length === 0) {
-      return res.status(404).json({ error: "No subjects found for this semester" });
-    }
-
     const faculties = await Faculty.find();
-    if (!faculties || faculties.length === 0) {
-      return res.status(404).json({ error: "No faculties found" });
-    }
 
-    // clear old faculty schedules
+    if (!subjects?.length) return res.json([]);
+    if (!faculties?.length) return res.json([]);
+
     await FacultySchedule.deleteMany({ semester: semesterNum });
 
-    // schedule
-    const schedulingResults = await scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum);
+    const results = await scheduleAllDivisionsRoundRobin(subjects, faculties, semesterNum);
 
-    // write timetables
-    const docs = schedulingResults.map(r => ({
+    const docs = results.map(r => ({
       year,
       semester: semesterNum,
       division: r.division,
@@ -194,85 +169,110 @@ router.get("/generateAll", async (req, res) => {
     }));
 
     await Timetable.deleteMany({ year, semester: semesterNum });
-    const inserted = await Timetable.insertMany(docs, { ordered: true });
+    const inserted = await Timetable.insertMany(docs);
 
     const unassigned = {};
-    schedulingResults.forEach(r => {
-      if (r.unassigned && r.unassigned.length) unassigned[r.division] = r.unassigned;
+    results.forEach(r => {
+      if (r.unassigned.length) unassigned[r.division] = r.unassigned;
     });
 
     return res.json({
-      message: `✅ Timetables generated for semester ${semesterNum}`,
+      message: `Timetables generated for semester ${semesterNum}`,
       generatedFor: divisions,
       insertedCount: inserted.length,
       unassigned,
     });
   } catch (err) {
-    console.error("❌ Error in /generateAll:", err);
-    return res.status(500).json({ error: err.message || "Server error" });
+    console.error(err);
+    res.status(500).json({ error: err.message || "Server error" });
   }
 });
 
-// ------------------------------
-// Get Single Division Timetable
-// ------------------------------
+// Get Single Division
 router.get("/generate", async (req, res) => {
   try {
     const { semester, division } = req.query;
-    if (!semester || !division)
-      return res.status(400).json({ error: "semester and division required" });
+    if (!semester || !division) return res.status(400).json({ error: "semester and division required" });
     const t = await Timetable.findOne({ semester: Number(semester), division });
-    if (!t) return res.status(404).json({ error: "No timetable found" });
-    return res.json(t);
+    return res.json(t || { timetable: {} });
   } catch (err) {
-    console.error("Error fetching timetable:", err);
-    return res.status(500).json({ error: err.message || "Server error" });
+    console.error(err);
+    res.status(500).json({ error: err.message || "Server error" });
   }
 });
 
-// ------------------------------
 // Delete Timetable
-// ------------------------------
 router.delete("/delete", async (req, res) => {
   try {
     const { semester, division } = req.query;
-    if (!semester || !division)
-      return res.status(400).json({ error: "semester and division required" });
+    if (!semester || !division) return res.status(400).json({ error: "semester and division required" });
     await Timetable.deleteOne({ semester: Number(semester), division });
-    return res.json({ message: "✅ Timetable deleted" });
+    res.json({ message: "✅ Timetable deleted" });
   } catch (err) {
-    console.error("Error deleting timetable:", err);
-    return res.status(500).json({ error: err.message || "Server error" });
+    console.error(err);
+    res.status(500).json({ error: err.message || "Server error" });
   }
 });
 
-
-// ------------------------------
-// PATCH: Update Edited Timetable
-// ------------------------------
+// Update Whole Timetable
 router.patch("/update", async (req, res) => {
   try {
     const { semester, division, timetable } = req.body;
-    if (!semester || !division || !timetable) {
-      return res.status(400).json({ error: "semester, division, timetable required" });
-    }
-
-    // Update the timetable document
+    if (!semester || !division || !timetable) return res.status(400).json({ error: "semester, division, timetable required" });
     const updated = await Timetable.findOneAndUpdate(
       { semester: Number(semester), division },
       { $set: { timetable } },
-      { new: true }
+      { new: true, upsert: true }
     );
-
-    if (!updated) return res.status(404).json({ error: "Timetable not found" });
-
-    return res.json({ message: "✅ Timetable updated successfully", timetable: updated.timetable });
+    res.json({ message: "✅ Timetable updated", timetable: updated.timetable });
   } catch (err) {
-    console.error("Error updating timetable:", err);
-    return res.status(500).json({ error: err.message || "Server error" });
+    console.error(err);
+    res.status(500).json({ error: err.message || "Server error" });
   }
 });
 
-module.exports = router;
+// Update single slot
+router.patch("/updateSlot", async (req, res) => {
+  try {
+    const { semester, division, day, slot, subject, faculty } = req.body;
+    if (!semester || !division || !day || !slot) return res.status(400).json({ error: "Missing required fields" });
+
+    const updateQuery = {};
+    updateQuery[`timetable.${day}.${slot}`] = { subject, faculty };
+
+    const updated = await Timetable.findOneAndUpdate(
+      { semester: Number(semester), division },
+      { $set: updateQuery },
+      { new: true, upsert: true }
+    );
+
+    res.json({ message: "Slot updated successfully", timetable: updated.timetable });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to update slot" });
+  }
+});
+
+// Check Faculty Clash
+router.post("/checkFacultyClash", async (req, res) => {
+  try {
+    const { facultyName, day, slot } = req.body;
+    if (!facultyName || !day || !slot) return res.status(400).json({ error: "facultyName, day, slot required" });
+
+    const timetables = await Timetable.find();
+    for (const t of timetables) {
+      const lecture = t.timetable?.[day]?.[slot];
+      if (lecture?.faculty === facultyName) {
+        return res.json({ clash: true, clashInfo: { year: t.year, semester: t.semester, division: t.division, day, slot } });
+      }
+    }
+    res.json({ clash: false });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
 
 module.exports = router;

@@ -17,14 +17,14 @@ const subjectColors = {};
 const getColor = (subject) => {
   if (!subjectColors[subject]) {
     const colors = [
-      "#FF6EC7", // bright pink
-      "#7C4DFF", // vibrant purple
-      "#1E90FF", // deep sky blue
-      "#FF8C42", // bright orange
-      "#00FA9A", // medium spring green
-      "#FFD700", // gold
-      "#FF4500", // orange red
-      "#40E0D0"  // turquoise
+      "#9B59B6",
+      "#3498DB",
+      "#E67E22",
+      "#1ABC9C",
+      "#FF6F61",
+      "#F1C40F",
+      "#8E44AD",
+      "#00CED1",
     ];
     
     subjectColors[subject] =
@@ -110,58 +110,58 @@ export default function TimeTableView() {
         <p>Loading timetable...</p>
       ) : !timetable ? (
         <p className="no-timetable-text">
-        No timetable found for Semester {semester} - Division {division}
+          No timetable found for Semester {semester} - Division {division}
         </p>
-
       ) : (
-        <table className="timetable">
-          <thead>
-            <tr>
-              <th>Time Slot</th>
-              {weekdays.map((day) => (
-                <th key={day}>{day}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {slots.map((slot) => (
-              <tr key={slot} className={slot.includes("Lunch") ? "lunch-row" : ""}>
-                <td className={slot.includes("Lunch") ? "lunch-cell" : ""}>{slot}</td>
-                {weekdays.map((day) => {
-                  if (slot.includes("Lunch")) {
+        <>
+          <table className="timetable">
+            <thead>
+              <tr>
+                <th>Time Slot</th>
+                {weekdays.map((day) => (
+                  <th key={day}>{day}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {slots.map((slot) => (
+                <tr key={slot} className={slot.includes("Lunch") ? "lunch-row" : ""}>
+                  <td className={slot.includes("Lunch") ? "lunch-cell" : ""}>{slot}</td>
+                  {weekdays.map((day) => {
+                    if (slot.includes("Lunch")) {
+                      return (
+                        <td key={day} className="lunch-cell">
+                          Lunch Break
+                        </td>
+                      );
+                    }
+                    const lecture = timetable[day]?.[slot];
+                    if (!lecture) return <td key={day}>-</td>;
                     return (
-                      <td key={day} className="lunch-cell">
-                        Lunch Break
+                      <td
+                        key={day}
+                        style={{ backgroundColor: getColor(lecture.subject) }}
+                      >
+                        <strong style={{ color: "#000" }}>{lecture.subject}</strong>
+                        <br />
+                        <small>{lecture.faculty}</small>
                       </td>
                     );
-                  }
-                  const lecture = timetable[day]?.[slot];
-                  if (!lecture) return <td key={day}>-</td>;
-                  return (
-                    <td
-                      key={day}
-                      style={{ backgroundColor: getColor(lecture.subject) }}
-                    >
-                      <strong>{lecture.subject}</strong>
-                      <br />
-                      <small>{lecture.faculty}</small>
-                    </td>
-                  );
-                })}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Delete Timetable Button */}
+          <button 
+            className="delete-timetable-btn"
+            onClick={handleDeleteTimetable}
+          >
+            Delete Timetable
+          </button>
+        </>
       )}
-
-      {/* Delete Timetable Button */}
-      <button 
-        className="delete-timetable-btn"
-        onClick={handleDeleteTimetable}
-      >
-        Delete Timetable
-      </button>
-
     </div>
   );
 }

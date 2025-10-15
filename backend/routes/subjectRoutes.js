@@ -71,4 +71,19 @@ router.delete("/:semester", async (req, res) => {
   }
 });
 
+// Get subjects by semester
+router.get("/semester/:semester", async (req, res) => {
+  try {
+    const semester = Number(req.params.semester);
+    const subjects = await Subject.find({ semester });
+    if (!subjects || subjects.length === 0) {
+      return res.status(404).json({ message: "No subjects found for this semester" });
+    }
+    res.json(subjects);
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+    res.status(500).json({ message: "Server error while fetching subjects." });
+  }
+});
+
 module.exports = router;
